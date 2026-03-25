@@ -1,0 +1,25 @@
+package com.hms.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Table(name = "physician")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Physician {
+
+    @Id
+    @Column(name = "EmployeeID")
+    private Integer employeeId;
+
+    @Column(name = "Name", length = 30)
+    private String name;
+
+    @Column(name = "Position", length = 30)
+    private String position;
+
+    @Column(name = "SSN")
+    private Integer ssn;
+}
