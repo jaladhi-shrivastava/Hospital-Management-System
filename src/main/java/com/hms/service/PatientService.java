@@ -1,17 +1,33 @@
 package com.hms.service;
 
 import com.hms.entity.Patient;
+import com.hms.repository.PatientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 
-public interface PatientService {
+@Service
+public class PatientService {
 
-    Patient savePatient(Patient patient);
+    @Autowired
+    private PatientRepository patientRepository;
 
-    List<Patient> getAllPatients();
+    public List<Patient> getAllPatients() {
+        return patientRepository.findAll();
+    }
 
-    Patient getPatientById(Integer ssn);
+    public Patient getPatientById(Integer ssn) {
+        Optional<Patient> patient = patientRepository.findById(ssn);
+        return patient.orElse(null);
+    }
 
-    Patient updatePatient(Integer ssn, Patient patient);
+    public Patient savePatient(Patient patient) {
+        return patientRepository.save(patient);
+    }
 
-    void deletePatient(Integer ssn);
+    public void deletePatient(Integer ssn) {
+        patientRepository.deleteById(ssn);
+    }
 }
