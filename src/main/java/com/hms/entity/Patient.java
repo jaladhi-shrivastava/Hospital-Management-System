@@ -1,5 +1,6 @@
 package com.hms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,5 +30,6 @@ public class Patient {
     // PCP = Primary Care Physician
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PCP", referencedColumnName = "EmployeeID")
+    @JsonIgnore
     private Physician pcp;
 }
