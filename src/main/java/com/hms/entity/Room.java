@@ -1,5 +1,6 @@
 package com.hms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,12 +18,13 @@ public class Room {
     @Column(name = "RoomType", length = 30)
     private String roomType;
 
-    // FK → Block (composite)
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "BlockFloor", referencedColumnName = "BlockFloor"),
-            @JoinColumn(name = "BlockCode",  referencedColumnName = "BlockCode")
+            @JoinColumn(name = "BlockCode", referencedColumnName = "BlockCode")
     })
+    @JsonIgnore
     private Block block;
 
     @Column(name = "Unavailable")
