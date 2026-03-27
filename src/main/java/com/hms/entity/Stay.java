@@ -1,5 +1,6 @@
 package com.hms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -17,10 +18,12 @@ public class Stay {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Patient", referencedColumnName = "SSN")
+    @JsonIgnore
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Room", referencedColumnName = "RoomNumber")
+    @JsonIgnore
     private Room room;
 
     @Column(name = "StayStart")
