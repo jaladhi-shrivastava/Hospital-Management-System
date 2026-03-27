@@ -1,6 +1,9 @@
 package com.hms.service;
-
+import com.hms.entity.Prescribes;
 import com.hms.entity.PrescribesId;
+import java.util.List;
+
+
 
 import java.util.List;
 

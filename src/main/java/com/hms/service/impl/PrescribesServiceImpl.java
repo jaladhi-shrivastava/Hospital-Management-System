@@ -1,11 +1,12 @@
 package com.hms.service.impl;
 
+import com.hms.entity.Prescribes;
 import com.hms.entity.PrescribesId;
 import com.hms.repository.PrescribesRepository;
 import com.hms.service.PrescribesService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -23,11 +24,11 @@ public class PrescribesServiceImpl implements PrescribesService {
     }
 
     public List<Prescribes> getByPatient(Integer patientId) {
-        return repository.findByIdPatient(patientId);
+        return repository.findById_Patient(patientId);
     }
 
     public List<Prescribes> getByPhysician(Integer physicianId) {
-        return repository.findByIdPhysician(physicianId);
+        return repository.findById_Physician(physicianId);
     }
 
     public void deletePrescription(PrescribesId id) {

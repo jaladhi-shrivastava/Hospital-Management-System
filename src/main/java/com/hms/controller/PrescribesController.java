@@ -1,5 +1,4 @@
 package com.hms.controller;
-
 import com.hms.entity.Prescribes;
 import com.hms.entity.PrescribesId;
 import com.hms.service.PrescribesService;
@@ -11,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/prescriptions")
+
 public class PrescribesController {
 
     @Autowired
