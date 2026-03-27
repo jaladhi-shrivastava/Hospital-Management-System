@@ -1,32 +1,28 @@
 package com.hms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
-
-@Embeddable
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class AffiliatedWithId implements Serializable {
-    @Column(name = "Physician")   private Integer physician;
-    @Column(name = "Department")  private Integer department;
-}
 
 @Entity
 @Table(name = "affiliated_with")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AffiliatedWith {
 
     @EmbeddedId
     private AffiliatedWithId id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Physician", insertable = false, updatable = false)
     private Physician physician;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Department", insertable = false, updatable = false)
     private Department department;
