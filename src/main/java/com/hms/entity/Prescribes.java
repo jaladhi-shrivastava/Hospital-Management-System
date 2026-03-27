@@ -2,19 +2,6 @@ package com.hms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-@Embeddable
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class PrescribesId implements Serializable {
-    @Column(name = "Physician")    private Integer physician;
-    @Column(name = "Patient")      private Integer patient;
-    @Column(name = "Medication")   private Integer medication;
-    @Column(name = "Date")         private LocalDateTime date;
-}
 
 @Entity
 @Table(name = "prescribes")
