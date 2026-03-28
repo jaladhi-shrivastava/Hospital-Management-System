@@ -1,26 +1,16 @@
 package com.hms.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-@Embeddable
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class PrescribesId implements Serializable {
-    @Column(name = "Physician")    private Integer physician;
-    @Column(name = "Patient")      private Integer patient;
-    @Column(name = "Medication")   private Integer medication;
-    @Column(name = "Date")         private LocalDateTime date;
-}
 
 @Entity
 @Table(name = "prescribes")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Prescribes {
 
     @EmbeddedId
@@ -28,18 +18,22 @@ public class Prescribes {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Physician", insertable = false, updatable = false)
+    @JsonIgnore
     private Physician physician;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Patient", insertable = false, updatable = false)
+    @JsonIgnore
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Medication", insertable = false, updatable = false)
+    @JsonIgnore
     private Medication medication;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Appointment", referencedColumnName = "AppointmentID")
+    @JsonIgnore
     private Appointment appointment;
 
     @Column(name = "Dose", length = 30)
