@@ -26,8 +26,6 @@ public class AdminModuleServiceImpl implements AdminModuleService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    // GET /api/reports/revenue
-    // Sums the cost of every Procedures record linked through Undergoes
     @Override
     public Double getTotalRevenue() {
         List<Undergoes> allUndergoes = undergoesRepository.findAll();
@@ -37,9 +35,6 @@ public class AdminModuleServiceImpl implements AdminModuleService {
                 .sum();
     }
 
-    // GET /procedures?patientId={id}
-    // Returns all Undergoes records for a patient — each record carries
-    // the patient, procedures, stay, physician, and assistingNurse
     @Override
     public List<Undergoes> getProceduresByPatient(Integer patientSsn) {
         return undergoesRepository.findAll()
@@ -48,21 +43,17 @@ public class AdminModuleServiceImpl implements AdminModuleService {
                 .collect(Collectors.toList());
     }
 
-    // GET /api/departments/doctor-count
-    // Groups AffiliatedWith records by department name and counts physicians
     @Override
     public Map<String, Long> getDoctorCountPerDepartment() {
         List<AffiliatedWith> all = affiliatedWithRepository.findAll();
         List<Department> departments = departmentRepository.findAll();
 
-        // Build a map: departmentId -> departmentName for display
         Map<Integer, String> deptNames = departments.stream()
                 .collect(Collectors.toMap(
                         d -> d.getDepartmentId(),
                         d -> d.getName()
                 ));
 
-        // Group by department ID, count physicians, then convert ID to name
         Map<String, Long> result = new LinkedHashMap<>();
         all.stream()
                 .collect(Collectors.groupingBy(

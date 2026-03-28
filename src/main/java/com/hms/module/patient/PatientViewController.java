@@ -13,8 +13,6 @@ public class PatientViewController {
     @Autowired
     private PatientModuleService patientModuleService;
 
-    // GET /patients/dashboard
-    // Shows currently admitted patients and recent procedures on one page
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("admittedPatients",
@@ -23,6 +21,6 @@ public class PatientViewController {
         model.addAttribute("recentProcedures",
                 patientModuleService.getRecentProcedures());
 
-        return "patient/dashboard";  // -> templates/patient/dashboard.html
+        return "patient/dashboard";
     }
 }
