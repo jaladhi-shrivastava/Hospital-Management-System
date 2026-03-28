@@ -10,11 +10,9 @@ import java.util.List;
 @Repository
 public interface StayRepository extends JpaRepository<Stay, Integer> {
 
-    // Used by PatientModule: currently admitted = stayEnd is null
     @Query("SELECT s FROM Stay s WHERE s.stayEnd IS NULL")
     List<Stay> findActiveStays();
 
-    // Used by RoomModule (inside AdminModule): rooms with active stays
     @Query("SELECT s FROM Stay s WHERE s.stayEnd IS NULL")
     List<Stay> findOccupiedRoomStays();
 }
