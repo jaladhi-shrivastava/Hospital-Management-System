@@ -9,10 +9,8 @@ import java.util.List;
 @Repository
 public interface OnCallRepository extends JpaRepository<OnCall, OnCallId> {
 
-    // All on-call records for a specific nurse
     List<OnCall> findById_Nurse(Integer nurseId);
 
-    // All nurses on call for a specific block
     List<OnCall> findById_BlockFloorAndId_BlockCode(
             Integer blockFloor, Integer blockCode);
 }
