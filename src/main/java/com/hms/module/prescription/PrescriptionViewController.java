@@ -1,4 +1,4 @@
-package com.hms.module.prescription;
+package com.hms.module;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

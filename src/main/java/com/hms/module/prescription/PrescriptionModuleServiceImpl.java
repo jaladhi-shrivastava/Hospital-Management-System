@@ -1,4 +1,4 @@
-package com.hms.module.prescription;
+package com.hms.module;
 
 import com.hms.entity.Prescribes;
 import com.hms.repository.PrescribesRepository;
