@@ -14,24 +14,18 @@ public class AdminViewController {
     @Autowired
     private AdminModuleService adminModuleService;
 
-    // GET /admin/login
-    // Renders the simple admin login page (no Spring Security — just a static form)
     @GetMapping("/login")
     public String loginPage() {
-        return "admin/login";  // → templates/admin/login.html
+        return "admin/login";
     }
 
-    // GET /admin/dashboard
-    // Main admin dashboard: revenue + department doctor count
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("totalRevenue", adminModuleService.getTotalRevenue());
         model.addAttribute("doctorCountPerDept", adminModuleService.getDoctorCountPerDepartment());
-        return "admin/dashboard";  // → templates/admin/dashboard.html
+        return "admin/dashboard";
     }
 
-    // GET /admin/procedures?patientId={ssn}
-    // Shows all procedures undergone by a specific patient
     @GetMapping("/procedures")
     public String proceduresByPatient(
             @RequestParam(required = false) Integer patientId,
@@ -41,6 +35,6 @@ public class AdminViewController {
             model.addAttribute("procedures", adminModuleService.getProceduresByPatient(patientId));
             model.addAttribute("patientId", patientId);
         }
-        return "admin/procedures";  // → templates/admin/procedures.html
+        return "admin/procedures";
     }
 }
