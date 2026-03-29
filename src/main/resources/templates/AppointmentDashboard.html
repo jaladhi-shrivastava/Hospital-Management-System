@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>HMS — Appointments Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+        :root {
+            --y1:#F6E58D; --y2:#F8E9A1; --peach:#F9D6A0;
+            --c1:#F8A3A0; --c2:#F9AFAF;
+            --brown:#5C3D2E; --brown-m:#7A5244; --brown-l:#A07060;
+            --cream:#FFFDF5; --border:#F0C8A0;
+        }
+        body { font-family:'Nunito',sans-serif; background:var(--y1); color:var(--brown); min-height:100vh; }
+        nav {
+            background:var(--cream); border-bottom:1.5px solid var(--border);
+            padding:0 40px; display:flex; align-items:center; justify-content:space-between;
+            height:62px; position:sticky; top:0; z-index:10;
+        }
+        .nav-brand { font-family:'Playfair Display',serif; font-size:20px; color:var(--brown); display:flex; align-items:center; gap:10px; }
+        .nav-links { display:flex; gap:4px; }
+        .nav-links a {
+            color:var(--brown-m); text-decoration:none; padding:7px 14px;
+            border-radius:8px; font-size:13px; font-weight:600; transition:background .15s;
+        }
+        .nav-links a:hover  { background:var(--y2); }
+        .nav-links a.active { background:var(--c1); color:var(--brown); }
+        main { max-width:1100px; margin:0 auto; padding:40px 24px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:34px; color:var(--brown); }
+        .page-sub   { font-size:14px; color:var(--brown-l); margin-top:4px; margin-bottom:28px; }
+        .api-badge {
+            display:inline-flex; align-items:center; gap:8px; background:var(--peach);
+            border:1.5px solid var(--border); border-radius:20px; padding:5px 14px;
+            font-size:12px; font-weight:700; color:var(--brown-m); margin-bottom:32px; letter-spacing:.04em;
+        }
+        .api-dot { width:8px; height:8px; background:var(--c1); border-radius:50%; }
+
+        /* SUMMARY */
+        .summary-row { display:flex; gap:16px; margin-bottom:36px; flex-wrap:wrap; }
+        .sum-card {
+            background:var(--cream); border:1.5px solid var(--border);
+            border-radius:14px; padding:22px 26px; flex:1; min-width:160px;
+        }
+        .sum-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--brown-l); margin-bottom:6px; }
+        .sum-value { font-family:'Playfair Display',serif; font-size:36px; color:var(--brown); }
+
+        /* TWO COLUMNS */
+        .two-col { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+        @media(max-width:768px) { .two-col { grid-template-columns:1fr; } }
+        .section-label {
+            font-family:'Playfair Display',serif; font-size:20px; color:var(--brown);
+            margin-bottom:14px; padding-bottom:10px; border-bottom:1.5px solid var(--border);
+        }
+        .table-card { background:var(--cream); border:1.5px solid var(--border); border-radius:16px; overflow:hidden; animation:rise .4s ease both; }
+        table { width:100%; border-collapse:collapse; }
+        th {
+            text-align:left; font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+            color:var(--brown-l); font-weight:700; padding:12px 16px;
+            background:var(--y2); border-bottom:1.5px solid var(--border);
+        }
+        td { padding:13px 16px; font-size:13px; color:var(--brown); border-bottom:1px solid var(--border); }
+        tr:last-child td { border-bottom:none; }
+        tr:hover td { background:var(--y2); }
+
+        .badge-occupied {
+            display:inline-block; background:var(--c1); color:var(--brown);
+            border:1px solid var(--c2); border-radius:20px;
+            padding:3px 11px; font-size:11px; font-weight:700;
+        }
+        .badge-onduty {
+            display:inline-block; background:var(--peach); color:var(--brown-m);
+            border:1px solid var(--border); border-radius:20px;
+            padding:3px 11px; font-size:11px; font-weight:700;
+        }
+        .empty { text-align:center; color:var(--brown-l); padding:32px; font-size:13px; }
+        @keyframes rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand">🏥 MedCore HMS</div>
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}">Admin</a>
+        <a th:href="@{/patients/dashboard}">Patients</a>
+        <a th:href="@{/physicians/dashboard}">Physicians</a>
+        <a th:href="@{/appointments/dashboard}" class="active">Appointments</a>
+        <a th:href="@{/prescriptions/dashboard}">Prescriptions</a>
+    </div>
+</nav>
+
+<main>
+    <div class="page-title">Appointments &amp; Ward Status</div>
+    <div class="page-sub">Live view of occupied rooms and nurses currently on call</div>
+
+    <div class="api-badge">
+        <div class="api-dot"></div>
+        Implementing: GET /api/rooms/occupied &nbsp;·&nbsp; GET /api/nurses/on-call
+    </div>
+
+    <!-- Summary Row -->
+    <div class="summary-row">
+        <div class="sum-card">
+            <div class="sum-label">Occupied Rooms</div>
+            <div class="sum-value" th:text="${occupiedRooms.size()}">0</div>
+        </div>
+        <div class="sum-card">
+            <div class="sum-label">Nurses On Call</div>
+            <div class="sum-value" th:text="${nursesOnCall.size()}">0</div>
+        </div>
+    </div>
+
+    <div class="two-col">
+
+        <!-- Occupied Rooms -->
+        <div>
+            <div class="section-label">Occupied Rooms</div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Room</th>
+                        <th>Patient</th>
+                        <th>Since</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="stay : ${occupiedRooms}">
+                        <td th:text="${stay.room != null ? 'Room ' + stay.room.roomNumber : '—'}">Room</td>
+                        <td th:text="${stay.patient != null ? stay.patient.name : 'N/A'}">Patient</td>
+                        <td th:text="${stay.stayStart}">Since</td>
+                        <td><span class="badge-occupied">Occupied</span></td>
+                    </tr>
+                    <tr th:if="${occupiedRooms.isEmpty()}">
+                        <td colspan="4" class="empty">All rooms are available.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Nurses On Call -->
+        <div>
+            <div class="section-label">Nurses On Call</div>
+            <div class="table-card">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Nurse</th>
+                        <th>Block</th>
+                        <th>Shift Start</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="oc : ${nursesOnCall}">
+                        <td th:text="${oc.nurse != null ? oc.nurse.name : 'N/A'}">Nurse</td>
+                        <td th:text="${'F' + oc.id.blockFloor + ' · B' + oc.id.blockCode}">Block</td>
+                        <td th:text="${oc.onCallStart}">Start</td>
+                        <td><span class="badge-onduty">On Duty</span></td>
+                    </tr>
+                    <tr th:if="${nursesOnCall.isEmpty()}">
+                        <td colspan="4" class="empty">No nurses currently on call.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+</body>
+</html>
+>

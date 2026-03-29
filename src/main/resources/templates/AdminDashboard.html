@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HMS — Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --y1: #F6E58D; --y2: #F8E9A1; --peach: #F9D6A0;
+      --c1: #F8A3A0; --c2: #F9AFAF;
+      --brown: #5C3D2E; --brown-m: #7A5244; --brown-l: #A07060;
+      --cream: #FFFDF5; --border: #F0C8A0; --surface: #FFF8E8;
+    }
+    body { font-family:'Nunito',sans-serif; background:var(--y1); color:var(--brown); min-height:100vh; }
+
+    /* NAV */
+    nav {
+      background:var(--cream); border-bottom:1.5px solid var(--border);
+      padding:0 40px; display:flex; align-items:center; justify-content:space-between;
+      height:62px; position:sticky; top:0; z-index:10;
+    }
+    .nav-brand { font-family:'Playfair Display',serif; font-size:20px; color:var(--brown); display:flex; align-items:center; gap:10px; }
+    .nav-brand span { font-size:20px; }
+    .nav-links { display:flex; gap:4px; }
+    .nav-links a {
+      color:var(--brown-m); text-decoration:none; padding:7px 14px;
+      border-radius:8px; font-size:13px; font-weight:600;
+      transition:background .15s,color .15s;
+    }
+    .nav-links a:hover  { background:var(--y2); color:var(--brown); }
+    .nav-links a.active { background:var(--c1); color:var(--brown); }
+
+    /* PAGE */
+    main { max-width:1100px; margin:0 auto; padding:40px 24px; }
+    .page-header { margin-bottom:36px; }
+    .page-title { font-family:'Playfair Display',serif; font-size:34px; color:var(--brown); }
+    .page-sub   { font-size:14px; color:var(--brown-l); margin-top:4px; }
+
+    /* API BADGE */
+    .api-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--peach); border:1.5px solid var(--border);
+      border-radius:20px; padding:5px 14px; font-size:12px;
+      font-weight:700; color:var(--brown-m); margin-bottom:28px;
+      letter-spacing:.04em;
+    }
+    .api-dot { width:8px; height:8px; background:var(--c1); border-radius:50%; }
+
+    /* STAT GRID */
+    .stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:40px; }
+    @media(max-width:800px) { .stat-grid { grid-template-columns:repeat(2,1fr); } }
+    .stat-card {
+      background:var(--cream); border:1.5px solid var(--border);
+      border-radius:16px; padding:28px 24px;
+      animation:rise .4s ease both;
+    }
+    .stat-card:nth-child(2) { animation-delay:.08s; }
+    .stat-card:nth-child(3) { animation-delay:.16s; }
+    .stat-card:nth-child(4) { animation-delay:.24s; }
+    .stat-icon  { font-size:28px; margin-bottom:14px; }
+    .stat-label { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--brown-l); margin-bottom:8px; }
+    .stat-value { font-family:'Playfair Display',serif; font-size:40px; color:var(--brown); line-height:1; }
+    .stat-sub   { font-size:12px; color:var(--brown-l); margin-top:6px; }
+
+    /* TABLE SECTION */
+    .section-label {
+      font-family:'Playfair Display',serif; font-size:22px;
+      color:var(--brown); margin-bottom:16px;
+      padding-bottom:10px; border-bottom:1.5px solid var(--border);
+    }
+    .table-card { background:var(--cream); border:1.5px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:36px; }
+    table { width:100%; border-collapse:collapse; }
+    th {
+      text-align:left; font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+      color:var(--brown-l); font-weight:700; padding:13px 18px;
+      background:var(--y2); border-bottom:1.5px solid var(--border);
+    }
+    td { padding:15px 18px; font-size:14px; color:var(--brown); border-bottom:1px solid var(--border); }
+    tr:last-child td { border-bottom:none; }
+    tr:hover td { background:var(--y2); }
+    .badge {
+      display:inline-block; background:var(--peach); color:var(--brown-m);
+      border:1px solid var(--border); border-radius:20px;
+      padding:3px 12px; font-size:12px; font-weight:700;
+    }
+    .empty { text-align:center; color:var(--brown-l); padding:40px; font-size:14px; }
+
+    @keyframes rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><span>🏥</span> MedCore HMS</div>
+  <div class="nav-links">
+    <a th:href="@{/admin/dashboard}" class="active">Admin</a>
+    <a th:href="@{/patients/dashboard}">Patients</a>
+    <a th:href="@{/physicians/dashboard}">Physicians</a>
+    <a th:href="@{/appointments/dashboard}">Appointments</a>
+    <a th:href="@{/prescriptions/dashboard}">Prescriptions</a>
+  </div>
+</nav>
+
+<main>
+  <div class="page-header">
+    <div class="page-title">Admin Dashboard</div>
+    <div class="page-sub">Hospital-wide overview — revenue, departments &amp; status</div>
+  </div>
+
+  <div class="api-badge">
+    <div class="api-dot"></div>
+    Implementing: GET /hospital/status
+  </div>
+
+  <!-- Hospital Status Cards (from getHospitalStatus()) -->
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-icon">🧑‍🤝‍🧑</div>
+      <div class="stat-label">Total Patients</div>
+      <div class="stat-value" th:text="${hospitalStatus['totalPatients']}">0</div>
+      <div class="stat-sub">Registered in system</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🛏</div>
+      <div class="stat-label">Active Admissions</div>
+      <div class="stat-value" th:text="${hospitalStatus['activeAdmissions']}">0</div>
+      <div class="stat-sub">Currently admitted</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🚪</div>
+      <div class="stat-label">Occupied Rooms</div>
+      <div class="stat-value" th:text="${hospitalStatus['occupiedRooms']}">0</div>
+      <div class="stat-sub">Rooms in use</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏢</div>
+      <div class="stat-label">Departments</div>
+      <div class="stat-value" th:text="${hospitalStatus['totalDepartments']}">0</div>
+      <div class="stat-sub">Active departments</div>
+    </div>
+  </div>
+
+  <!-- Department Doctor Count Table -->
+  <div class="section-label">Doctor Count per Department</div>
+  <div class="table-card">
+    <table>
+      <thead>
+      <tr>
+        <th>Department</th>
+        <th>Number of Doctors</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="entry : ${doctorCountPerDept}">
+        <td th:text="${entry.key}">Dept Name</td>
+        <td><span class="badge" th:text="${entry.value}">0</span></td>
+      </tr>
+      <tr th:if="${doctorCountPerDept.isEmpty()}">
+        <td colspan="2" class="empty">No department data available.</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Revenue Summary -->
+  <div class="section-label">Revenue Summary</div>
+  <div class="stat-grid" style="grid-template-columns:1fr 1fr;">
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-label">Total Hospital Revenue</div>
+      <div class="stat-value" style="font-size:30px;">
+        ₹<span th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)}">0.00</span>
+      </div>
+      <div class="stat-sub">Based on all completed procedures</div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
