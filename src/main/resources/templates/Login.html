@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HMS — Admin Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --y1: #F6E58D; --y2: #F8E9A1; --peach: #F9D6A0;
+      --c1: #F8A3A0; --c2: #F9AFAF;
+      --brown: #5C3D2E; --brown-m: #7A5244; --brown-l: #A07060;
+      --cream: #FFFDF5; --border: #F0C8A0;
+    }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--y1);
+      background-image: radial-gradient(ellipse at 10% 90%, #F9AFAF55 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 10%, #F9D6A055 0%, transparent 50%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card {
+      background: var(--cream); border: 1.5px solid var(--border);
+      border-radius: 24px; padding: 52px 44px; width: 100%; max-width: 420px;
+      animation: rise 0.5s cubic-bezier(.22,.68,0,1.2) both;
+    }
+    @keyframes rise { from { opacity:0; transform:translateY(28px) scale(.97); } to { opacity:1; transform:none; } }
+    .logo-row { display:flex; align-items:center; gap:14px; margin-bottom:36px; }
+    .logo-circle {
+      width:48px; height:48px; background:var(--c1);
+      border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px;
+    }
+    .logo-name { font-family:'Playfair Display',serif; font-size:22px; color:var(--brown); }
+    .logo-tag  { font-size:11px; color:var(--brown-l); letter-spacing:.08em; text-transform:uppercase; font-weight:600; margin-top:2px; }
+    h2   { font-family:'Playfair Display',serif; font-size:28px; color:var(--brown); margin-bottom:6px; }
+    .sub { font-size:14px; color:var(--brown-l); margin-bottom:32px; }
+    label {
+      display:block; font-size:11px; font-weight:700; letter-spacing:.08em;
+      text-transform:uppercase; color:var(--brown-m); margin-bottom:8px;
+    }
+    input[type="text"], input[type="password"] {
+      width:100%; background:var(--y2); border:1.5px solid var(--border);
+      border-radius:10px; padding:13px 16px; color:var(--brown);
+      font-family:'Nunito',sans-serif; font-size:15px; outline:none;
+      transition:border-color .2s,background .2s; margin-bottom:20px;
+    }
+    input:focus { border-color:var(--c1); background:var(--cream); }
+    input::placeholder { color:var(--brown-l); }
+    button {
+      width:100%; background:var(--c1); color:var(--brown); border:none;
+      border-radius:10px; padding:14px; font-family:'Nunito',sans-serif;
+      font-size:15px; font-weight:700; cursor:pointer;
+      transition:background .2s,transform .1s; margin-top:6px;
+    }
+    button:hover  { background:var(--c2); }
+    button:active { transform:scale(.98); }
+    hr { border:none; border-top:1.5px solid var(--border); margin:28px 0 18px; }
+    .footer { text-align:center; font-size:12px; color:var(--brown-l); }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-row">
+    <div class="logo-circle">🏥</div>
+    <div>
+      <div class="logo-name">MedCore HMS</div>
+      <div class="logo-tag">Hospital Management</div>
+    </div>
+  </div>
+  <h2>Admin Portal</h2>
+  <p class="sub">Sign in to access the dashboard</p>
+  <form th:action="@{/admin/dashboard}" method="get">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" placeholder="admin" autocomplete="off"/>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="••••••••"/>
+    <button type="submit">Sign In →</button>
+  </form>
+  <hr/>
+  <p class="footer">Hospital Management System &copy; 2025 — Admin Access Only</p>
+</div>
+</body>
+</html>
