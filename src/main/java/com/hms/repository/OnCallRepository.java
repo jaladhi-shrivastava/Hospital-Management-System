@@ -15,10 +15,8 @@ public interface OnCallRepository extends JpaRepository<OnCall, OnCallId> {
     @Query("SELECT o FROM OnCall o WHERE :now BETWEEN o.onCallStart AND o.onCallEnd")
     List<OnCall> findCurrentlyOnCall(@Param("now") LocalDateTime now);
 
-    // All on-call records for a specific nurse
     List<OnCall> findById_Nurse(Integer nurseId);
 
-    // All nurses on call for a specific block
     List<OnCall> findById_BlockFloorAndId_BlockCode(
             Integer blockFloor, Integer blockCode);
 }

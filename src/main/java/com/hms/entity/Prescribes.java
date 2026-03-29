@@ -2,9 +2,6 @@ package com.hms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 
 @Entity
 @Table(name = "prescribes")
@@ -29,7 +26,7 @@ public class Prescribes {
     private Medication medication;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Appointment", referencedColumnName = "AppointmentID")
+    @JoinColumn(name = "Appointment")
     private Appointment appointment;
 
     @Column(name = "Dose", length = 30)

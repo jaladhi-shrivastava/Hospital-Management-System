@@ -6,7 +6,6 @@ import jakarta.persistence.Embeddable;
 import lombok.*;
 import java.io.Serializable;
 
-// Place this class INSIDE OnCall.java (same file) or as a separate file
 @Embeddable
 @Data
 @NoArgsConstructor

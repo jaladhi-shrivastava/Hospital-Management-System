@@ -12,27 +12,27 @@ import java.time.LocalDateTime;
 public class Appointment {
 
     @Id
-    @Column(name = "AppointmentID")
+    @Column(name = "appointment_id")
     private Integer appointmentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Patient", referencedColumnName = "SSN")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "patient_id")
     private Patient patient;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PrepNurse", referencedColumnName = "EmployeeID")
+    @JoinColumn(name = "prep_nurse_id")
     private Nurse prepNurse;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Physician", referencedColumnName = "EmployeeID")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "physician_id")
     private Physician physician;
 
-    @Column(name = "Starto")
+    @Column(name = "start_time")
     private LocalDateTime start;
 
-    @Column(name = "Endo")
+    @Column(name = "end_time")
     private LocalDateTime end;
 
-    @Column(name = "ExaminationRoom")
+    @Column(name = "examination_room")
     private String examinationRoom;
 }
