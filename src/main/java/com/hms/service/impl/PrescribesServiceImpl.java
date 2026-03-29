@@ -4,7 +4,6 @@ import com.hms.entity.Prescribes;
 import com.hms.entity.PrescribesId;
 import com.hms.repository.PrescribesRepository;
 import com.hms.service.PrescribesService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,30 +13,43 @@ import java.util.List;
 public class PrescribesServiceImpl implements PrescribesService {
 
     @Autowired
-    private PrescribesRepository repository;
+    private PrescribesRepository prescribesRepository;
 
     @Override
-    public Prescribes addPrescription(Prescribes p) {
-        return repository.save(p);
+    public Prescribes savePrescribes(Prescribes prescribes) {
+        return prescribesRepository.save(prescribes);
     }
 
     @Override
-    public List<Prescribes> getAllPrescriptions() {
-        return repository.findAll();
+    public List<Prescribes> getAllPrescribes() {
+        return prescribesRepository.findAll();
     }
 
     @Override
-    public List<Prescribes> getByPatient(Integer patientId) {
-        return repository.findByPatientSsn(patientId);
+    public Prescribes getPrescribesById(PrescribesId id) {
+        return prescribesRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<Prescribes> getByPhysician(Integer physicianId) {
-        return repository.findByPhysicianId(physicianId);
+    public void deletePrescribes(PrescribesId id) {
+        prescribesRepository.deleteById(id);
     }
 
+    // ✅ MATCHES: findByPatientSsn
     @Override
-    public void deletePrescription(PrescribesId id) {
-        repository.deleteById(id);
+    public List<Prescribes> getPrescribesByPatient(Integer patientSsn) {
+        return prescribesRepository.findByPatientSsn(patientSsn);
+    }
+
+    // ✅ MATCHES: findByPhysicianId
+    @Override
+    public List<Prescribes> getPrescribesByPhysician(Integer physicianId) {
+        return prescribesRepository.findByPhysicianId(physicianId);
+    }
+
+    // ✅ EXTRA (good for dashboard / module usage)
+    @Override
+    public List<Prescribes> getPrescribesByAppointment(Integer appointmentId) {
+        return prescribesRepository.findByAppointmentId(appointmentId);
     }
 }

@@ -1,4 +1,5 @@
 package com.hms.controller;
+
 import com.hms.entity.Prescribes;
 import com.hms.entity.PrescribesId;
 import com.hms.service.PrescribesService;
@@ -10,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/prescriptions")
-
 public class PrescribesController {
 
     @Autowired
@@ -18,22 +18,22 @@ public class PrescribesController {
 
     @PostMapping
     public Prescribes add(@RequestBody Prescribes p) {
-        return service.addPrescription(p);
+        return service.savePrescribes(p); // ✅ FIXED
     }
 
     @GetMapping
     public List<Prescribes> getAll() {
-        return service.getAllPrescriptions();
+        return service.getAllPrescribes(); // ✅ FIXED
     }
 
     @GetMapping("/patient/{id}")
     public List<Prescribes> getByPatient(@PathVariable Integer id) {
-        return service.getByPatient(id);
+        return service.getPrescribesByPatient(id); // ✅ FIXED
     }
 
     @GetMapping("/physician/{id}")
     public List<Prescribes> getByPhysician(@PathVariable Integer id) {
-        return service.getByPhysician(id);
+        return service.getPrescribesByPhysician(id); // ✅ FIXED
     }
 
     @DeleteMapping
@@ -50,7 +50,7 @@ public class PrescribesController {
                 LocalDateTime.parse(date)
         );
 
-        service.deletePrescription(id);
+        service.deletePrescribes(id); // ✅ FIXED
         return "Deleted successfully";
     }
 }
