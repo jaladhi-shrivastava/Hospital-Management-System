@@ -77,7 +77,7 @@ Client → Controller → Service → Repository → Database
 
 ##  Module Breakdown
 
-###  Patient Module
+### 👤 Patient Module
 - Manages patient records  
 - Stores personal details and medical history  
 
@@ -143,9 +143,6 @@ This project is collaboratively developed by:
 - Anushka  
 - Unnati  
 
----
-
-##  Status
 
 - Core modules implemented  
 - Backend APIs functional  
