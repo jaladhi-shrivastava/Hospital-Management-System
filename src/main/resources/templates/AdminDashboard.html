@@ -15,7 +15,6 @@
     }
     body { font-family:'Nunito',sans-serif; background:var(--y1); color:var(--brown); min-height:100vh; }
 
-    /* NAV */
     nav {
       background:var(--cream); border-bottom:1.5px solid var(--border);
       padding:0 40px; display:flex; align-items:center; justify-content:space-between;
@@ -32,13 +31,11 @@
     .nav-links a:hover  { background:var(--y2); color:var(--brown); }
     .nav-links a.active { background:var(--c1); color:var(--brown); }
 
-    /* PAGE */
     main { max-width:1100px; margin:0 auto; padding:40px 24px; }
     .page-header { margin-bottom:36px; }
     .page-title { font-family:'Playfair Display',serif; font-size:34px; color:var(--brown); }
     .page-sub   { font-size:14px; color:var(--brown-l); margin-top:4px; }
 
-    /* API BADGE */
     .api-badge {
       display:inline-flex; align-items:center; gap:8px;
       background:var(--peach); border:1.5px solid var(--border);
@@ -48,7 +45,6 @@
     }
     .api-dot { width:8px; height:8px; background:var(--c1); border-radius:50%; }
 
-    /* STAT GRID */
     .stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-bottom:40px; }
     @media(max-width:800px) { .stat-grid { grid-template-columns:repeat(2,1fr); } }
     .stat-card {
@@ -64,7 +60,6 @@
     .stat-value { font-family:'Playfair Display',serif; font-size:40px; color:var(--brown); line-height:1; }
     .stat-sub   { font-size:12px; color:var(--brown-l); margin-top:6px; }
 
-    /* TABLE SECTION */
     .section-label {
       font-family:'Playfair Display',serif; font-size:22px;
       color:var(--brown); margin-bottom:16px;
@@ -113,8 +108,6 @@
     <div class="api-dot"></div>
     Implementing: GET /hospital/status
   </div>
-
-  <!-- Hospital Status Cards (from getHospitalStatus()) -->
   <div class="stat-grid">
     <div class="stat-card">
       <div class="stat-icon">🧑‍🤝‍🧑</div>
@@ -142,7 +135,6 @@
     </div>
   </div>
 
-  <!-- Department Doctor Count Table -->
   <div class="section-label">Doctor Count per Department</div>
   <div class="table-card">
     <table>
@@ -163,8 +155,6 @@
       </tbody>
     </table>
   </div>
-
-  <!-- Revenue Summary -->
   <div class="section-label">Revenue Summary</div>
   <div class="stat-grid" style="grid-template-columns:1fr 1fr;">
     <div class="stat-card">

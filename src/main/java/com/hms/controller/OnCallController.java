@@ -16,19 +16,16 @@ public class OnCallController {
 
     private final OnCallService onCallService;
 
-    // GET /api/on-call
     @GetMapping
     public ResponseEntity<List<OnCall>> getAll() {
         return ResponseEntity.ok(onCallService.getAllOnCallRecords());
     }
 
-    // GET /api/on-call/nurse/{nurseId}
     @GetMapping("/nurse/{nurseId}")
     public ResponseEntity<List<OnCall>> getByNurse(@PathVariable Integer nurseId) {
         return ResponseEntity.ok(onCallService.getOnCallByNurse(nurseId));
     }
 
-    // GET /api/on-call/block/{floor}/{code}
     @GetMapping("/block/{floor}/{code}")
     public ResponseEntity<List<OnCall>> getByBlock(
             @PathVariable Integer floor,
@@ -36,15 +33,12 @@ public class OnCallController {
         return ResponseEntity.ok(onCallService.getOnCallByBlock(floor, code));
     }
 
-    // POST /api/on-call
     @PostMapping
     public ResponseEntity<OnCall> create(@RequestBody OnCall onCall) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(onCallService.saveOnCall(onCall));
     }
 
-    // DELETE /api/on-call
-    // Pass OnCallId as JSON body: { "nurse":1, "blockFloor":2, "blockCode":3 }
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody OnCallId id) {
         onCallService.deleteOnCall(id);
