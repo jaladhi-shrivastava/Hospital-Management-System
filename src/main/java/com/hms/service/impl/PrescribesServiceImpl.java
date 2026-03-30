@@ -35,19 +35,19 @@ public class PrescribesServiceImpl implements PrescribesService {
         prescribesRepository.deleteById(id);
     }
 
-    // ✅ MATCHES: findByPatientSsn
+
     @Override
     public List<Prescribes> getPrescribesByPatient(Integer patientSsn) {
         return prescribesRepository.findByPatientSsn(patientSsn);
     }
 
-    // ✅ MATCHES: findByPhysicianId
+
     @Override
     public List<Prescribes> getPrescribesByPhysician(Integer physicianId) {
         return prescribesRepository.findByPhysicianId(physicianId);
     }
 
-    // ✅ EXTRA (good for dashboard / module usage)
+
     @Override
     public List<Prescribes> getPrescribesByAppointment(Integer appointmentId) {
         return prescribesRepository.findByAppointmentId(appointmentId);

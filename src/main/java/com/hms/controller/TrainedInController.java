@@ -16,34 +16,28 @@ public class TrainedInController {
 
     private final TrainedInService trainedInService;
 
-    // GET /api/trained-in
     @GetMapping
     public ResponseEntity<List<TrainedIn>> getAll() {
         return ResponseEntity.ok(trainedInService.getAllTrainedIn());
     }
 
-    // GET /api/trained-in/physician/{physicianId}
     @GetMapping("/physician/{physicianId}")
     public ResponseEntity<List<TrainedIn>> getByPhysician(
             @PathVariable Integer physicianId) {
         return ResponseEntity.ok(trainedInService.getByPhysician(physicianId));
     }
 
-    // GET /api/trained-in/procedure/{code}
     @GetMapping("/procedure/{code}")
     public ResponseEntity<List<TrainedIn>> getByProcedure(@PathVariable Integer code) {
         return ResponseEntity.ok(trainedInService.getByProcedure(code));
     }
 
-    // POST /api/trained-in
     @PostMapping
     public ResponseEntity<TrainedIn> create(@RequestBody TrainedIn trainedIn) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(trainedInService.saveTrainedIn(trainedIn));
     }
 
-    // PUT /api/trained-in
-    // Pass TrainedInId fields + updated dates in body
     @PutMapping
     public ResponseEntity<TrainedIn> update(
             @RequestParam Integer physicianId,
@@ -53,8 +47,6 @@ public class TrainedInController {
         return ResponseEntity.ok(trainedInService.updateCertification(id, updated));
     }
 
-    // DELETE /api/trained-in
-    // Body: { "physician": 1, "treatment": 5 }
     @DeleteMapping
     public ResponseEntity<Void> delete(@RequestBody TrainedInId id) {
         trainedInService.deleteTrainedIn(id);

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Appointments Dashboard</title>
+</head>
+
+<body>
+
+<h2>Appointments Dashboard</h2>
+
+<p>Total Records: <span th:text="${occupiedRooms.size()}">0</span></p>
+
+<hr/>
+
+<h3>Procedures (Used as Occupied Rooms)</h3>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Procedure</th>
+        <th>Patient ID</th>
+        <th>Cost</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="u : ${occupiedRooms}">
+        <td th:text="${u.procedures.name}">Procedure</td>
+        <td th:text="${u.id.patient}">Patient</td>
+        <td th:text="${u.procedures.cost}">Cost</td>
+    </tr>
+
+    <tr th:if="${occupiedRooms.isEmpty()}">
+        <td colspan="3">No Data Available</td>
+    </tr>
+    </tbody>
+</table>
+
+<hr/>
+
+<h3>Procedures (Used as Nurses On Call)</h3>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Procedure</th>
+        <th>Patient ID</th>
+        <th>Cost</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="u : ${nursesOnCall}">
+        <td th:text="${u.procedures.name}">Procedure</td>
+        <td th:text="${u.id.patient}">Patient</td>
+        <td th:text="${u.procedures.cost}">Cost</td>
+    </tr>
+
+    <tr th:if="${nursesOnCall.isEmpty()}">
+        <td colspan="3">No Data Available</td>
+    </tr>
+    </tbody>
+</table>
+
+<br><br>
+
+<a th:href="@{/admin/dashboard}">Back to Dashboard</a>
+
+</body>
+</html>

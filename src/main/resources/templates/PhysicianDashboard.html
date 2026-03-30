@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>HMS — Physician Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+        :root {
+            --y1:#F6E58D; --y2:#F8E9A1; --peach:#F9D6A0;
+            --c1:#F8A3A0; --c2:#F9AFAF;
+            --brown:#5C3D2E; --brown-m:#7A5244; --brown-l:#A07060;
+            --cream:#FFFDF5; --border:#F0C8A0;
+        }
+        body { font-family:'Nunito',sans-serif; background:var(--y1); color:var(--brown); min-height:100vh; }
+        nav {
+            background:var(--cream); border-bottom:1.5px solid var(--border);
+            padding:0 40px; display:flex; align-items:center; justify-content:space-between;
+            height:62px; position:sticky; top:0; z-index:10;
+        }
+        .nav-brand { font-family:'Playfair Display',serif; font-size:20px; color:var(--brown); display:flex; align-items:center; gap:10px; }
+        .nav-links { display:flex; gap:4px; }
+        .nav-links a {
+            color:var(--brown-m); text-decoration:none; padding:7px 14px;
+            border-radius:8px; font-size:13px; font-weight:600; transition:background .15s;
+        }
+        .nav-links a:hover  { background:var(--y2); }
+        .nav-links a.active { background:var(--c1); color:var(--brown); }
+        main { max-width:1100px; margin:0 auto; padding:40px 24px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:34px; color:var(--brown); }
+        .page-sub   { font-size:14px; color:var(--brown-l); margin-top:4px; margin-bottom:28px; }
+        .api-badge {
+            display:inline-flex; align-items:center; gap:8px; background:var(--peach);
+            border:1.5px solid var(--border); border-radius:20px; padding:5px 14px;
+            font-size:12px; font-weight:700; color:var(--brown-m); margin-bottom:32px; letter-spacing:.04em;
+        }
+        .api-dot { width:8px; height:8px; background:var(--c1); border-radius:50%; }
+        .hero-card {
+            background:var(--cream); border:1.5px solid var(--c1);
+            border-radius:20px; padding:36px; margin-bottom:36px;
+            display:flex; align-items:center; gap:28px;
+            animation:rise .4s ease both;
+        }
+        .hero-avatar {
+            width:72px; height:72px; background:var(--c2);
+            border-radius:50%; display:flex; align-items:center; justify-content:center;
+            font-family:'Playfair Display',serif; font-size:28px; color:var(--brown);
+            flex-shrink:0; border:2px solid var(--c1);
+        }
+        .hero-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--c1); margin-bottom:6px; }
+        .hero-name  { font-family:'Playfair Display',serif; font-size:30px; color:var(--brown); margin-bottom:4px; }
+        .hero-sub   { font-size:14px; color:var(--brown-l); }
+        .hero-badge {
+            margin-left:auto; background:var(--y1); border:1.5px solid var(--border);
+            border-radius:12px; padding:14px 20px; text-align:center; flex-shrink:0;
+        }
+        .hero-badge-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--brown-l); }
+        .hero-badge-val   { font-family:'Playfair Display',serif; font-size:32px; color:var(--brown); }
+
+        /* TABLE */
+        .section-label {
+            font-family:'Playfair Display',serif; font-size:22px; color:var(--brown);
+            margin-bottom:16px; padding-bottom:10px; border-bottom:1.5px solid var(--border);
+        }
+        .table-card { background:var(--cream); border:1.5px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:36px; animation:rise .5s ease both; }
+        table { width:100%; border-collapse:collapse; }
+        th {
+            text-align:left; font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+            color:var(--brown-l); font-weight:700; padding:13px 18px;
+            background:var(--y2); border-bottom:1.5px solid var(--border);
+        }
+        td { padding:15px 18px; font-size:14px; color:var(--brown); border-bottom:1px solid var(--border); }
+        tr:last-child td { border-bottom:none; }
+        tr:hover td { background:var(--y2); }
+        .badge-expiring {
+            display:inline-block; background:var(--c2); color:var(--brown-m);
+            border:1px solid var(--c1); border-radius:20px;
+            padding:3px 12px; font-size:12px; font-weight:700;
+        }
+        .empty { text-align:center; color:var(--brown-l); padding:40px; font-size:14px; }
+        @keyframes rise { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-brand">🏥 MedCore HMS</div>
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}">Admin</a>
+        <a th:href="@{/patients/dashboard}">Patients</a>
+        <a th:href="@{/physicians/dashboard}" class="active">Physicians</a>
+        <a th:href="@{/appointments/dashboard}">Appointments</a>
+        <a th:href="@{/prescriptions/dashboard}">Prescriptions</a>
+    </div>
+</nav>
+
+<main>
+    <div class="page-title">Physician Dashboard</div>
+    <div class="page-sub">Most active physician and certification expiry alerts</div>
+
+    <div class="api-badge">
+        <div class="api-dot"></div>
+        Implementing: GET /api/physicians/most-busy
+    </div>
+
+    <div class="hero-card" th:if="${mostBusy != null}">
+        <div class="hero-avatar"
+             th:text="${#strings.substring(mostBusy.name, 0, 1)}">D</div>
+        <div>
+            <div class="hero-label">Most Active Physician</div>
+            <div class="hero-name" th:text="${mostBusy.name}">Dr. Name</div>
+            <div class="hero-sub"
+                 th:text="${mostBusy.position + '  ·  Employee ID: ' + mostBusy.employeeId}">
+                Position · ID
+            </div>
+        </div>
+        <div class="hero-badge">
+            <div class="hero-badge-label">Highest Appointments</div>
+            <div class="hero-badge-val">🥇</div>
+        </div>
+    </div>
+    <div th:if="${mostBusy == null}"
+         style="color:var(--brown-l); margin-bottom:32px; font-size:14px;">
+        No appointment data available yet.
+    </div>
+
+    <div class="section-label">Certifications Expiring This Month</div>
+    <div class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <th>Physician</th>
+                <th>Position</th>
+                <th>Procedure / Treatment</th>
+                <th>Certified On</th>
+                <th>Expires On</th>
+                <th>Alert</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="t : ${expiringCerts}">
+                <td th:text="${t.physician != null ? t.physician.name : 'N/A'}">Name</td>
+                <td th:text="${t.physician != null ? t.physician.position : '—'}">Position</td>
+                <td th:text="${t.treatment != null ? t.treatment.name : 'N/A'}">Treatment</td>
+                <td th:text="${t.certificationDate}">Certified</td>
+                <td th:text="${t.certificationExpires}">Expires</td>
+                <td><span class="badge-expiring">Expiring Soon</span></td>
+            </tr>
+            <tr th:if="${expiringCerts.isEmpty()}">
+                <td colspan="6" class="empty">No certifications expiring this month.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+</body>
+</html>
