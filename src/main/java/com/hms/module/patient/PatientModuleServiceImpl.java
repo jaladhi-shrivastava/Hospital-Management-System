@@ -6,6 +6,7 @@ import com.hms.repository.StayRepository;
 import com.hms.repository.UndergoesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,16 +20,16 @@ public class PatientModuleServiceImpl implements PatientModuleService {
     @Autowired
     private UndergoesRepository undergoesRepository;
 
-    // GET /api/patients/currently-admitted
-    // Delegates to StayRepository — finds stays where stayEnd IS NULL
+    // Uses JOIN FETCH via findActiveStays — patient and room are loaded
     @Override
+    @Transactional(readOnly = true)
     public List<Stay> getCurrentlyAdmittedPatients() {
         return stayRepository.findActiveStays();
     }
 
-    // GET /api/patients/recent-procedures
-    // Finds all Undergoes records where dateUndergoes >= 30 days ago
+    // Uses JOIN FETCH via findRecentUndergoes — all associations loaded
     @Override
+    @Transactional(readOnly = true)
     public List<Undergoes> getRecentProcedures() {
         LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
         return undergoesRepository.findRecentUndergoes(thirtyDaysAgo);

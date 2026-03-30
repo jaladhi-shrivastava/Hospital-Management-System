@@ -14,13 +14,17 @@ public class PhysicianViewController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        model.addAttribute("mostBusy",
-                physicianModuleService.getMostBusyPhysician());
 
-        model.addAttribute("expiringCerts",
-                physicianModuleService.getPhysiciansWithExpiringCertifications());
+        model.addAttribute(
+                "mostBusy",
+                physicianModuleService.getMostBusyPhysician()
+        );
+        model.addAttribute(
+                "expiringCerts",
+                physicianModuleService.getPhysiciansCertifications()
+        );
+        return "physician/dashboard";  
 
-        return "PhysicianDashboard";
     }
 
     @GetMapping("/{id}/patients")

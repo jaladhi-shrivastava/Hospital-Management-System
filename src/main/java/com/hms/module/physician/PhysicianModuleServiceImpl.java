@@ -7,6 +7,7 @@ import com.hms.repository.AppointmentRepository;
 import com.hms.repository.TrainedInRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,33 +22,34 @@ public class PhysicianModuleServiceImpl implements PhysicianModuleService {
     private AppointmentRepository appointmentRepository;
 
     @Override
-    public List<TrainedIn> getPhysiciansWithExpiringCertifications() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startOfMonth = now.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
-        LocalDateTime endOfMonth = now.withDayOfMonth(now.toLocalDate().lengthOfMonth())
-                .withHour(23).withMinute(59).withSecond(59);
-
-        return trainedInRepository.findAll()
-                .stream()
-                .filter(t -> t.getCertificationExpires() != null
-                        && !t.getCertificationExpires().isBefore(startOfMonth)
-                        && !t.getCertificationExpires().isAfter(endOfMonth))
-                .toList();
+    @Transactional(readOnly = true)
+    public List<TrainedIn> getPhysiciansCertifications() {
+        return trainedInRepository.findAllWithDetails();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Physician getMostBusyPhysician() {
         List<Object[]> results = appointmentRepository.findPhysicianAppointmentCounts();
-        if (results.isEmpty()) return null;
-        return (Physician) results.get(0)[0];
+        if (results == null || results.isEmpty()) return null;
+
+        Object first = results.get(0)[0];
+        if (first instanceof Physician) {
+            return (Physician) first;
+        }
+        return null;
     }
 
+
     @Override
+    @Transactional(readOnly = true)
     public List<Patient> getPatientsByPhysician(Integer physicianId) {
         return appointmentRepository.findPatientsByPhysicianId(physicianId);
     }
 
+
     @Override
+    @Transactional(readOnly = true)
     public List<TrainedIn> getCertifiedDoctorsForProcedure(Integer procedureCode) {
         return trainedInRepository.findById_Treatment(procedureCode);
     }

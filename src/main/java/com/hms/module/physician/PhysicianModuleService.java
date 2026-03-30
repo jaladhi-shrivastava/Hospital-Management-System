@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PhysicianModuleService {
 
-    List<TrainedIn> getPhysiciansWithExpiringCertifications();
+    List<TrainedIn> getPhysiciansCertifications();
 
     Physician getMostBusyPhysician();
 
