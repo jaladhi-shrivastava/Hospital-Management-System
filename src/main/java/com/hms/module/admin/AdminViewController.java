@@ -18,8 +18,12 @@ public class AdminViewController {
 
     @GetMapping("/login")
     public String loginPage() {
+<<<<<<< HEAD
         return "admin/login";
 
+=======
+        return "Login";
+>>>>>>> 65d7bd0926b1c4cc8006cce0b762caef2bd41466
     }
 
     // GET /admin/dashboard
@@ -28,11 +32,26 @@ public class AdminViewController {
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
 
+<<<<<<< HEAD
         model.addAttribute("totalRevenue",       adminModuleService.getTotalRevenue());
         model.addAttribute("doctorCountPerDept", adminModuleService.getDoctorCountPerDepartment());
         model.addAttribute("hospitalStatus",     adminModuleService.getHospitalStatus());
         return "admin/dashboard";  // → templates/admin/dashboard.html
 
+=======
+        model.addAttribute("totalRevenue", adminModuleService.getTotalRevenue());
+        model.addAttribute("doctorCountPerDept", adminModuleService.getDoctorCountPerDepartment());
+
+        Map<String, Object> hospitalStatus = new HashMap<>();
+        hospitalStatus.put("totalPatients", 100);
+        hospitalStatus.put("activeAdmissions", 25);
+        hospitalStatus.put("occupiedRooms", 18);
+        hospitalStatus.put("totalDepartments", 5);
+
+        model.addAttribute("hospitalStatus", hospitalStatus);
+
+        return "AdminDashboard";
+>>>>>>> 65d7bd0926b1c4cc8006cce0b762caef2bd41466
     }
 
 
@@ -45,8 +64,21 @@ public class AdminViewController {
             model.addAttribute("procedures", adminModuleService.getProceduresByPatient(patientId));
             model.addAttribute("patientId", patientId);
         }
+<<<<<<< HEAD
 
         return "admin/procedures";
 
+=======
+        return "Procedures";
+    }
+
+    @GetMapping("/appointments")
+    public String appointmentsDashboard(Model model) {
+
+        model.addAttribute("occupiedRooms", adminModuleService.getProceduresByPatient(1));
+        model.addAttribute("nursesOnCall", adminModuleService.getProceduresByPatient(1));
+
+        return "AppointmentDashboard";
+>>>>>>> 65d7bd0926b1c4cc8006cce0b762caef2bd41466
     }
 }
