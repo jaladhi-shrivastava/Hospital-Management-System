@@ -2,6 +2,7 @@ package com.hms.service.impl;
 
 import com.hms.entity.Prescribes;
 import com.hms.entity.PrescribesId;
+import com.hms.exception.ResourceNotFoundException;
 import com.hms.repository.PrescribesRepository;
 import com.hms.service.PrescribesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,26 +28,27 @@ public class PrescribesServiceImpl implements PrescribesService {
 
     @Override
     public Prescribes getPrescribesById(PrescribesId id) {
-        return prescribesRepository.findById(id).orElse(null);
+        return prescribesRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Prescription not found"));
     }
 
     @Override
     public void deletePrescribes(PrescribesId id) {
+        if (!prescribesRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Prescription not found");
+        }
         prescribesRepository.deleteById(id);
     }
-
 
     @Override
     public List<Prescribes> getPrescribesByPatient(Integer patientSsn) {
         return prescribesRepository.findByPatientSsn(patientSsn);
     }
 
-
     @Override
     public List<Prescribes> getPrescribesByPhysician(Integer physicianId) {
         return prescribesRepository.findByPhysicianId(physicianId);
     }
-
 
     @Override
     public List<Prescribes> getPrescribesByAppointment(Integer appointmentId) {

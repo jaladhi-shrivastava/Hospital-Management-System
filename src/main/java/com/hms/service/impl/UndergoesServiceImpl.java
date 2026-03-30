@@ -2,6 +2,7 @@ package com.hms.service.impl;
 
 import com.hms.entity.Undergoes;
 import com.hms.entity.UndergoesId;
+import com.hms.exception.ResourceNotFoundException;
 import com.hms.repository.UndergoesRepository;
 import com.hms.service.UndergoesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class UndergoesServiceImpl implements UndergoesService {
     @Override
     public Undergoes getUndergoesById(UndergoesId id) {
         return undergoesRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Undergoes record not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Undergoes record not found"));
     }
 
     @Override

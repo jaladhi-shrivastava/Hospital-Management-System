@@ -1,6 +1,7 @@
 package com.hms.service.impl;
 
 import com.hms.entity.Stay;
+import com.hms.exception.ResourceNotFoundException;
 import com.hms.repository.StayRepository;
 import com.hms.service.StayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,13 @@ public class StayServiceImpl implements StayService {
     @Override
     public Stay getStayById(Integer id) {
         return stayRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Stay not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Stay not found with ID: " + id));
     }
 
     @Override
     public Stay updateStay(Integer id, Stay stay) {
         Stay existingStay = stayRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Stay not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Stay not found with ID: " + id));
 
         existingStay.setStayStart(stay.getStayStart());
         existingStay.setStayEnd(stay.getStayEnd());
@@ -46,7 +47,7 @@ public class StayServiceImpl implements StayService {
     @Override
     public void deleteStay(Integer id) {
         Stay existingStay = stayRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Stay not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Stay not found with ID: " + id));
 
         stayRepository.delete(existingStay);
     }

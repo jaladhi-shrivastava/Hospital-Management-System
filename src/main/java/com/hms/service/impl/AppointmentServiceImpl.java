@@ -1,6 +1,7 @@
 package com.hms.service.impl;
 
 import com.hms.entity.Appointment;
+import com.hms.exception.ResourceNotFoundException;
 import com.hms.repository.AppointmentRepository;
 import com.hms.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public Appointment getAppointmentById(Integer id) {
         return appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found: " + id));
     }
 
     @Override
     public Appointment updateAppointment(Integer id, Appointment appointment) {
         Appointment existing = appointmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Appointment not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found: " + id));
 
         existing.setStart(appointment.getStart());
         existing.setEnd(appointment.getEnd());
@@ -44,6 +45,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public void deleteAppointment(Integer id) {
-        appointmentRepository.deleteById(id);
+        Appointment existing = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found: " + id));
+
+        appointmentRepository.delete(existing);
     }
 }
