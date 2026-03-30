@@ -12,11 +12,27 @@ import java.util.List;
 
 @Repository
 public interface OnCallRepository extends JpaRepository<OnCall, OnCallId> {
-    @Query("SELECT o FROM OnCall o WHERE :now BETWEEN o.onCallStart AND o.onCallEnd")
+
+    // Used by AppointmentModule: nurses currently on call
+    @Query("SELECT o FROM OnCall o " +
+            "LEFT JOIN FETCH o.nurse " +
+            "LEFT JOIN FETCH o.block " +
+            "WHERE o.onCallStart <= :now AND o.onCallEnd >= :now")
     List<OnCall> findCurrentlyOnCall(@Param("now") LocalDateTime now);
 
-    List<OnCall> findById_Nurse(Integer nurseId);
+    // Used by existing OnCallService/Controller: find by nurse ID
+    @Query("SELECT o FROM OnCall o " +
+            "LEFT JOIN FETCH o.nurse " +
+            "LEFT JOIN FETCH o.block " +
+            "WHERE o.id.nurse = :nurseId")
+    List<OnCall> findById_Nurse(@Param("nurseId") Integer nurseId);
 
+    // Used by existing OnCallService/Controller: find by block floor and block code
+    @Query("SELECT o FROM OnCall o " +
+            "LEFT JOIN FETCH o.nurse " +
+            "LEFT JOIN FETCH o.block " +
+            "WHERE o.id.blockFloor = :blockFloor AND o.id.blockCode = :blockCode")
     List<OnCall> findById_BlockFloorAndId_BlockCode(
-            Integer blockFloor, Integer blockCode);
+            @Param("blockFloor") Integer blockFloor,
+            @Param("blockCode") Integer blockCode);
 }
