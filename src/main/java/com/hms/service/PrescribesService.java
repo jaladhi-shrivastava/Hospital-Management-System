@@ -1,21 +1,24 @@
 package com.hms.service;
+
 import com.hms.entity.Prescribes;
 import com.hms.entity.PrescribesId;
-import java.util.List;
-
-
 
 import java.util.List;
 
 public interface PrescribesService {
 
-    Prescribes addPrescription(Prescribes p);
+    Prescribes savePrescribes(Prescribes prescribes);
 
-    List<Prescribes> getAllPrescriptions();
+    List<Prescribes> getAllPrescribes();
 
-    List<Prescribes> getByPatient(Integer patientId);
+    Prescribes getPrescribesById(PrescribesId id);
 
-    List<Prescribes> getByPhysician(Integer physicianId);
+    void deletePrescribes(PrescribesId id);
 
-    void deletePrescription(PrescribesId id);
+    // ✅ MUST match repository method names
+    List<Prescribes> getPrescribesByPatient(Integer patientSsn);
+
+    List<Prescribes> getPrescribesByPhysician(Integer physicianId);
+
+    List<Prescribes> getPrescribesByAppointment(Integer appointmentId);
 }
