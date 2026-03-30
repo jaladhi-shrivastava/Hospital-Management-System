@@ -3,9 +3,9 @@ package com.hms.module.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/admin")
@@ -16,14 +16,14 @@ public class AdminViewController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "admin/login";
+        return "Login";
     }
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("totalRevenue", adminModuleService.getTotalRevenue());
         model.addAttribute("doctorCountPerDept", adminModuleService.getDoctorCountPerDepartment());
-        return "admin/dashboard";
+        return "AdminDashboard"; // matches templates/AdminDashboard.html
     }
 
     @GetMapping("/procedures")
@@ -35,6 +35,15 @@ public class AdminViewController {
             model.addAttribute("procedures", adminModuleService.getProceduresByPatient(patientId));
             model.addAttribute("patientId", patientId);
         }
-        return "admin/procedures";
+        return "Procedures";
     }
-}
+
+    @GetMapping("/appointments")
+    public String appointmentsDashboard(Model model) {
+
+        model.addAttribute("occupiedRooms", adminModuleService.getProceduresByPatient(1));
+        model.addAttribute("nursesOnCall", adminModuleService.getProceduresByPatient(1));
+
+        return "AppointmentDashboard";
+    }
+    }
