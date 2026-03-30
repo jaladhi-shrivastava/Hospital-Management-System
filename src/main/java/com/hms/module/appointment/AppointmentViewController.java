@@ -25,18 +25,4 @@ public class AppointmentViewController {
         return "appointment/dashboard";  // → templates/appointment/dashboard.html
     }
 
-    // GET /appointments/by-physician?physicianId={id}
-    // Shows all appointments for a given physician
-    @GetMapping("/by-physician")
-    public String appointmentsByPhysician(
-            @RequestParam(required = false) Integer physicianId,
-            Model model) {
-
-        if (physicianId != null) {
-            model.addAttribute("appointments",
-                    appointmentModuleService.getAppointmentsByPhysician(physicianId));
-            model.addAttribute("physicianId", physicianId);
-        }
-        return "appointment/by-physician";  // → templates/appointment/by-physician.html
-    }
 }
