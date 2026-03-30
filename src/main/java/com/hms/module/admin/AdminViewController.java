@@ -5,7 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -21,9 +22,19 @@ public class AdminViewController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
+
         model.addAttribute("totalRevenue", adminModuleService.getTotalRevenue());
         model.addAttribute("doctorCountPerDept", adminModuleService.getDoctorCountPerDepartment());
-        return "AdminDashboard"; // matches templates/AdminDashboard.html
+
+        Map<String, Object> hospitalStatus = new HashMap<>();
+        hospitalStatus.put("totalPatients", 100);
+        hospitalStatus.put("activeAdmissions", 25);
+        hospitalStatus.put("occupiedRooms", 18);
+        hospitalStatus.put("totalDepartments", 5);
+
+        model.addAttribute("hospitalStatus", hospitalStatus);
+
+        return "AdminDashboard";
     }
 
     @GetMapping("/procedures")
@@ -46,4 +57,4 @@ public class AdminViewController {
 
         return "AppointmentDashboard";
     }
-    }
+}

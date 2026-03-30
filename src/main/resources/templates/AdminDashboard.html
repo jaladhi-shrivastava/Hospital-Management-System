@@ -93,7 +93,7 @@
     <a th:href="@{/admin/dashboard}" class="active">Admin</a>
     <a th:href="@{/patients/dashboard}">Patients</a>
     <a th:href="@{/physicians/dashboard}">Physicians</a>
-    <a th:href="@{/appointments/dashboard}">Appointments</a>
+    <a th:href="@{/admin/appointments}">Appointments</a>
     <a th:href="@{/prescriptions/dashboard}">Prescriptions</a>
   </div>
 </nav>
@@ -108,6 +108,7 @@
     <div class="api-dot"></div>
     Implementing: GET /hospital/status
   </div>
+
   <div class="stat-grid">
     <div class="stat-card">
       <div class="stat-icon">🧑‍🤝‍🧑</div>
@@ -115,18 +116,21 @@
       <div class="stat-value" th:text="${hospitalStatus['totalPatients']}">0</div>
       <div class="stat-sub">Registered in system</div>
     </div>
+
     <div class="stat-card">
       <div class="stat-icon">🛏</div>
       <div class="stat-label">Active Admissions</div>
       <div class="stat-value" th:text="${hospitalStatus['activeAdmissions']}">0</div>
       <div class="stat-sub">Currently admitted</div>
     </div>
+
     <div class="stat-card">
       <div class="stat-icon">🚪</div>
       <div class="stat-label">Occupied Rooms</div>
       <div class="stat-value" th:text="${hospitalStatus['occupiedRooms']}">0</div>
       <div class="stat-sub">Rooms in use</div>
     </div>
+
     <div class="stat-card">
       <div class="stat-icon">🏢</div>
       <div class="stat-label">Departments</div>
@@ -146,8 +150,8 @@
       </thead>
       <tbody>
       <tr th:each="entry : ${doctorCountPerDept}">
-        <td th:text="${entry.key}">Dept Name</td>
-        <td><span class="badge" th:text="${entry.value}">0</span></td>
+        <td th:text="${entry.key}"></td>
+        <td><span class="badge" th:text="${entry.value}"></span></td>
       </tr>
       <tr th:if="${doctorCountPerDept.isEmpty()}">
         <td colspan="2" class="empty">No department data available.</td>
@@ -155,17 +159,19 @@
       </tbody>
     </table>
   </div>
+
   <div class="section-label">Revenue Summary</div>
   <div class="stat-grid" style="grid-template-columns:1fr 1fr;">
     <div class="stat-card">
       <div class="stat-icon">💰</div>
       <div class="stat-label">Total Hospital Revenue</div>
       <div class="stat-value" style="font-size:30px;">
-        ₹<span th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)}">0.00</span>
+        ₹<span th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)}"></span>
       </div>
       <div class="stat-sub">Based on all completed procedures</div>
     </div>
   </div>
+
 </main>
 
 </body>
