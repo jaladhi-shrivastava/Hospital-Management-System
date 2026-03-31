@@ -1,6 +1,7 @@
 package com.hms.service.base.impl;
 
 import com.hms.entity.Room;
+import com.hms.exception.ResourceNotFoundException;
 import com.hms.repository.RoomRepository;
 import com.hms.service.base.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,13 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room getRoomById(Integer roomNumber) {
         return roomRepository.findById(roomNumber)
-                .orElseThrow(() -> new RuntimeException("Room not found with ID: " + roomNumber));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + roomNumber));
     }
 
     @Override
     public Room updateRoom(Integer roomNumber, Room room) {
         Room existingRoom = roomRepository.findById(roomNumber)
-                .orElseThrow(() -> new RuntimeException("Room not found with ID: " + roomNumber));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + roomNumber));
 
         existingRoom.setRoomType(room.getRoomType());
         existingRoom.setUnavailable(room.getUnavailable());
@@ -47,7 +48,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public void deleteRoom(Integer roomNumber) {
         Room existingRoom = roomRepository.findById(roomNumber)
-                .orElseThrow(() -> new RuntimeException("Room not found with ID: " + roomNumber));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with ID: " + roomNumber));
 
         roomRepository.delete(existingRoom);
     }
