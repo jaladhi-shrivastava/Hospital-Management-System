@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/prescriptions")
-public class PrescriptionViewController {
+public class PrescribesViewController {
 
     @Autowired
     private PrescriptionModuleService prescriptionModuleService;
