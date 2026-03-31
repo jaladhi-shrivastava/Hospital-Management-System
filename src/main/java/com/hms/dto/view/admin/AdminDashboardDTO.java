@@ -6,11 +6,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
-// AdminViewController /admin/dashboard
-// model.addAttribute("totalRevenue",       adminModuleService.getTotalRevenue());
-// model.addAttribute("doctorCountPerDept", adminModuleService.getDoctorCountPerDepartment());
-// model.addAttribute("hospitalStatus",     adminModuleService.getHospitalStatus());
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
