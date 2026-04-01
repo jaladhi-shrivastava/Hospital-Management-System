@@ -1,18 +1,23 @@
 package com.hms.service.module.physician;
 
-import com.hms.entity.Patient;
-import com.hms.entity.Physician;
-import com.hms.entity.TrainedIn;
+import com.hms.dto.view.physician.CertifiedDoctorDTO;
+import com.hms.dto.view.physician.ExpiringCertificationDTO;
+import com.hms.dto.view.physician.MostBusyPhysicianDTO;
+import com.hms.dto.view.physician.PhysicianPatientDTO;
 
 import java.util.List;
 
 public interface PhysicianModuleService {
 
-    List<TrainedIn> getPhysiciansCertifications();
+    // GET /api/physicians/most-busy
+    MostBusyPhysicianDTO getMostBusyPhysician();
 
-    Physician getMostBusyPhysician();
+    // GET /api/physicians/certification-expiring
+    List<ExpiringCertificationDTO> getPhysiciansCertifications();
 
-    List<Patient> getPatientsByPhysician(Integer physicianId);
+    // GET /api/physicians/{id}/patients
+    List<PhysicianPatientDTO> getPatientsByPhysician(Integer physicianId);
 
-    List<TrainedIn> getCertifiedDoctorsForProcedure(Integer procedureCode);
+    // GET /api/procedures/{id}/certified-doctors
+    List<CertifiedDoctorDTO> getCertifiedDoctorsForProcedure(Integer procedureCode);
 }

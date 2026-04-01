@@ -1,5 +1,7 @@
 package com.hms.service.module.appointment;
 
+import com.hms.dto.view.appointment.NurseOnCallDTO;
+import com.hms.dto.view.appointment.OccupiedRoomDTO;
 import com.hms.entity.Appointment;
 import com.hms.entity.OnCall;
 import com.hms.entity.Stay;
@@ -25,24 +27,53 @@ public class AppointmentModuleServiceImpl implements AppointmentModuleService {
     @Autowired
     private OnCallRepository onCallRepository;
 
-    // All appointments for a physician — patient, nurse, physician all JOIN FETCHed
+    // GET /api/rooms/occupied
+    // Maps each active Stay to OccupiedRoomDTO
+    @Override
+    @Transactional(readOnly = true)
+    public List<OccupiedRoomDTO> getOccupiedRooms() {
+        List<Stay> stays = stayRepository.findOccupiedRoomStays();
+        return stays.stream()
+                .map(s -> new OccupiedRoomDTO(
+                        s.getRoom() != null ? s.getRoom().getRoomNumber() : null,
+                        s.getRoom() != null ? s.getRoom().getRoomType() : null,
+                        s.getRoom() != null && s.getRoom().getBlock() != null
+                                ? s.getRoom().getBlock().getId().getBlockFloor() : null,
+                        s.getRoom() != null && s.getRoom().getBlock() != null
+                                ? s.getRoom().getBlock().getId().getBlockCode() : null,
+                        s.getStayId(),
+                        s.getStayStart(),
+                        s.getStayEnd(),
+                        s.getPatient() != null ? s.getPatient().getSsn() : null,
+                        s.getPatient() != null ? s.getPatient().getName() : null
+                ))
+                .toList();
+    }
+
+    // GET /api/nurses/on-call
+    // Maps each OnCall record to NurseOnCallDTO
+    @Override
+    @Transactional(readOnly = true)
+    public List<NurseOnCallDTO> getNursesOnCall() {
+        List<OnCall> onCalls = onCallRepository.findCurrentlyOnCall(LocalDateTime.now());
+        return onCalls.stream()
+                .map(o -> new NurseOnCallDTO(
+                        o.getId().getNurse(),
+                        o.getId().getBlockFloor(),
+                        o.getId().getBlockCode(),
+                        o.getNurse() != null ? o.getNurse().getName() : null,
+                        o.getNurse() != null ? o.getNurse().getPosition() : null,
+                        o.getNurse() != null ? o.getNurse().getRegistered() : null,
+                        o.getOnCallStart(),
+                        o.getOnCallEnd()
+                ))
+                .toList();
+    }
+
+    // Used by AppointmentViewController — returns raw Appointment entities for Thymeleaf
     @Override
     @Transactional(readOnly = true)
     public List<Appointment> getAppointmentsByPhysician(Integer physicianId) {
         return appointmentRepository.findByPhysicianId(physicianId);
-    }
-
-    // GET /api/rooms/occupied — patient and room JOIN FETCHed in StayRepository
-    @Override
-    @Transactional(readOnly = true)
-    public List<Stay> getOccupiedRooms() {
-        return stayRepository.findOccupiedRoomStays();
-    }
-
-    // GET /api/nurses/on-call — nurse and block JOIN FETCHed in OnCallRepository
-    @Override
-    @Transactional(readOnly = true)
-    public List<OnCall> getNursesOnCall() {
-        return onCallRepository.findCurrentlyOnCall(LocalDateTime.now());
     }
 }

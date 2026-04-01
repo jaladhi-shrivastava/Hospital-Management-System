@@ -1,7 +1,7 @@
 package com.hms.controller.api;
 
-import com.hms.entity.Stay;
-import com.hms.entity.Undergoes;
+import com.hms.dto.view.patient.AdmittedPatientDTO;
+import com.hms.dto.view.patient.RecentProcedureDTO;
 import com.hms.service.module.patient.PatientModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +18,15 @@ public class PatientApiController {
     @Autowired
     private PatientModuleService patientModuleService;
 
-
-
+    // GET /api/patients/currently-admitted
     @GetMapping("/currently-admitted")
-    public ResponseEntity<List<Stay>> getCurrentlyAdmitted() {
-        List<Stay> result = patientModuleService.getCurrentlyAdmittedPatients();
-        return ResponseEntity.ok(result);
+    public ResponseEntity<List<AdmittedPatientDTO>> getCurrentlyAdmitted() {
+        return ResponseEntity.ok(patientModuleService.getCurrentlyAdmittedPatients());
     }
 
-
-
+    // GET /api/patients/recent-procedures
     @GetMapping("/recent-procedures")
-    public ResponseEntity<List<Undergoes>> getRecentProcedures() {
-        List<Undergoes> result = patientModuleService.getRecentProcedures();
-        return ResponseEntity.ok(result);
+    public ResponseEntity<List<RecentProcedureDTO>> getRecentProcedures() {
+        return ResponseEntity.ok(patientModuleService.getRecentProcedures());
     }
 }
