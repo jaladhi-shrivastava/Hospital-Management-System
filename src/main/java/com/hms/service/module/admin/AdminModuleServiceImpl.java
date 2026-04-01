@@ -1,5 +1,7 @@
 package com.hms.service.module.admin;
 
+import com.hms.dto.view.admin.AdminDashboardDTO;
+import com.hms.dto.view.admin.AdminProcedureDTO;
 import com.hms.entity.AffiliatedWith;
 import com.hms.entity.Department;
 import com.hms.entity.Undergoes;
@@ -35,25 +37,63 @@ public class AdminModuleServiceImpl implements AdminModuleService {
     @Autowired
     private StayRepository stayRepository;
 
-    // Uses JOIN FETCH query — no lazy loading issues
+    // GET /hospital/status
+    // Wraps all hospital-wide counts into AdminDashboardDTO
+    @Override
+    @Transactional(readOnly = true)
+    public AdminDashboardDTO getHospitalStatus() {
+        Double revenue = getTotalRevenue();
+        Map<String, Long> deptCounts = getDoctorCountPerDepartment();
+
+        Map<String, Object> statusMap = new LinkedHashMap<>();
+        statusMap.put("totalPatients",    patientRepository.count());
+        statusMap.put("activeAdmissions", stayRepository.findActiveStays().size());
+        statusMap.put("occupiedRooms",    stayRepository.findOccupiedRoomStays().size());
+        statusMap.put("totalDepartments", departmentRepository.count());
+
+        return new AdminDashboardDTO(revenue, deptCounts, statusMap);
+    }
+
+    // GET /api/reports/revenue
+    // Sums cost of all procedures via Undergoes
     @Override
     @Transactional(readOnly = true)
     public Double getTotalRevenue() {
-        List<Undergoes> allUndergoes = undergoesRepository.findAllWithDetails();
-        return allUndergoes.stream()
+        return undergoesRepository.findAllWithDetails()
+                .stream()
                 .filter(u -> u.getProcedures() != null && u.getProcedures().getCost() != null)
                 .mapToDouble(u -> u.getProcedures().getCost())
                 .sum();
     }
 
-    // Uses JOIN FETCH query — procedures + physician fully loaded
+    // GET /procedures?patientId={id}
+    // Maps Undergoes records for a patient to AdminProcedureDTO
     @Override
     @Transactional(readOnly = true)
-    public List<Undergoes> getProceduresByPatient(Integer patientSsn) {
-        return undergoesRepository.findByPatientSsn(patientSsn);
+    public List<AdminProcedureDTO> getProceduresByPatient(Integer patientSsn) {
+        List<Undergoes> list = undergoesRepository.findByPatientSsn(patientSsn);
+        if (list.isEmpty()) {
+            throw new com.hms.exception.ResourceNotFoundException(
+                    "No procedures found for patient SSN: " + patientSsn);
+        }
+        return list.stream()
+                .map(u -> new AdminProcedureDTO(
+                        u.getId().getPatient(),
+                        u.getId().getProcedures(),
+                        u.getId().getStay(),
+                        u.getId().getDateUndergoes(),
+                        u.getProcedures() != null ? u.getProcedures().getName() : null,
+                        u.getProcedures() != null ? u.getProcedures().getCost() : null,
+                        u.getPhysician() != null ? u.getPhysician().getEmployeeId() : null,
+                        u.getPhysician() != null ? u.getPhysician().getName() : null,
+                        u.getAssistingNurse() != null ? u.getAssistingNurse().getEmployeeId() : null,
+                        u.getAssistingNurse() != null ? u.getAssistingNurse().getName() : null
+                ))
+                .toList();
     }
 
-    // Groups AffiliatedWith records by department name and counts physicians
+    // GET /api/departments/doctor-count
+    // Groups AffiliatedWith by department and counts physicians
     @Override
     @Transactional(readOnly = true)
     public Map<String, Long> getDoctorCountPerDepartment() {
@@ -62,8 +102,8 @@ public class AdminModuleServiceImpl implements AdminModuleService {
 
         Map<Integer, String> deptNames = departments.stream()
                 .collect(Collectors.toMap(
-                        d -> d.getDepartmentId(),
-                        d -> d.getName()
+                        Department::getDepartmentId,
+                        Department::getName
                 ));
 
         Map<String, Long> result = new LinkedHashMap<>();
@@ -72,23 +112,9 @@ public class AdminModuleServiceImpl implements AdminModuleService {
                         a -> a.getId().getDepartment(),
                         Collectors.counting()
                 ))
-                .forEach((deptId, count) -> {
-                    String deptName = deptNames.getOrDefault(deptId, "Dept-" + deptId);
-                    result.put(deptName, count);
-                });
+                .forEach((deptId, count) ->
+                        result.put(deptNames.getOrDefault(deptId, "Dept-" + deptId), count));
 
         return result;
-    }
-
-    // Returns a snapshot map with key hospital-wide counts
-    @Override
-    @Transactional(readOnly = true)
-    public Map<String, Object> getHospitalStatus() {
-        Map<String, Object> status = new LinkedHashMap<>();
-        status.put("totalPatients",    patientRepository.count());
-        status.put("activeAdmissions", stayRepository.findActiveStays().size());
-        status.put("occupiedRooms",    stayRepository.findOccupiedRoomStays().size());
-        status.put("totalDepartments", departmentRepository.count());
-        return status;
     }
 }

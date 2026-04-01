@@ -78,10 +78,16 @@
           <tr><th>Room</th><th>Patient</th><th>Since</th><th>Status</th></tr>
           </thead>
           <tbody>
-          <tr th:each="stay : ${occupiedRooms}">
-            <td th:text="${stay.room != null ? 'Room ' + stay.room.roomNumber : '—'}"></td>
-            <td th:text="${stay.patient != null ? stay.patient.name : 'N/A'}"></td>
-            <td th:text="${stay.stayStart}"></td>
+          <!--
+              occupiedRooms is List<OccupiedRoomDTO>
+              Fields: roomNumber, roomType, blockFloor, blockCode,
+                      stayId, stayStart, stayEnd,
+                      patientSsn, patientName
+          -->
+          <tr th:each="room : ${occupiedRooms}">
+            <td th:text="${room.roomNumber != null ? 'Room ' + room.roomNumber : '—'}"></td>
+            <td th:text="${room.patientName != null ? room.patientName : 'N/A'}"></td>
+            <td th:text="${room.stayStart}"></td>
             <td><span class="badge-occupied">Occupied</span></td>
           </tr>
           <tr th:if="${occupiedRooms.isEmpty()}">
@@ -100,10 +106,16 @@
           <tr><th>Nurse</th><th>Block</th><th>Shift Start</th><th>Status</th></tr>
           </thead>
           <tbody>
-          <tr th:each="oc : ${nursesOnCall}">
-            <td th:text="${oc.nurse != null ? oc.nurse.name : 'N/A'}"></td>
-            <td th:text="${'F' + oc.id.blockFloor + ' · B' + oc.id.blockCode}"></td>
-            <td th:text="${oc.onCallStart}"></td>
+          <!--
+              nursesOnCall is List<NurseOnCallDTO>
+              Fields: nurseId, blockFloor, blockCode,
+                      nurseName, nursePosition, registered,
+                      onCallStart, onCallEnd
+          -->
+          <tr th:each="nurse : ${nursesOnCall}">
+            <td th:text="${nurse.nurseName != null ? nurse.nurseName : 'N/A'}"></td>
+            <td th:text="${'F' + nurse.blockFloor + ' · B' + nurse.blockCode}"></td>
+            <td th:text="${nurse.onCallStart}"></td>
             <td><span class="badge-onduty">On Duty</span></td>
           </tr>
           <tr th:if="${nursesOnCall.isEmpty()}">

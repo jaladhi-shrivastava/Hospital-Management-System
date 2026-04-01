@@ -30,6 +30,9 @@
         .hero-label { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--c1); margin-bottom:6px; }
         .hero-name { font-family:'Playfair Display',serif; font-size:30px; color:var(--brown); margin-bottom:4px; }
         .hero-sub { font-size:14px; color:var(--brown-l); }
+        .hero-count { margin-left:auto; background:var(--y1); border:1.5px solid var(--border); border-radius:12px; padding:14px 20px; text-align:center; flex-shrink:0; }
+        .hero-count-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--brown-l); }
+        .hero-count-val { font-family:'Playfair Display',serif; font-size:32px; color:var(--brown); }
         .section-label { font-family:'Playfair Display',serif; font-size:22px; color:var(--brown); margin-bottom:16px; padding-bottom:10px; border-bottom:1.5px solid var(--border); }
         .table-card { background:var(--cream); border:1.5px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:36px; }
         table { width:100%; border-collapse:collapse; }
@@ -54,10 +57,13 @@
 </nav>
 <main>
     <div class="page-title">Physician Dashboard</div>
-    <div class="page-sub">Most active physician and certification expiry alerts</div>
-    <div class="api-badge"><div class="api-dot"></div>Implementing: GET /api/physicians/certification-expiring</div>
+    <div class="page-sub">Most active physician and certification records</div>
+    <div class="api-badge"><div class="api-dot"></div>Implementing: GET /api/physicians/most-busy &nbsp;·&nbsp; GET /api/physicians/certification-expiring</div>
 
-    <!-- Most Busy Physician -->
+    <!--
+        mostBusy is MostBusyPhysicianDTO
+        Fields: employeeId, name, position, appointmentCount
+    -->
     <div class="hero-card" th:if="${mostBusy != null}">
         <div class="hero-avatar" th:text="${#strings.substring(mostBusy.name, 0, 1)}">D</div>
         <div>
@@ -65,31 +71,39 @@
             <div class="hero-name" th:text="${mostBusy.name}">Dr. Name</div>
             <div class="hero-sub" th:text="${mostBusy.position + '  ·  Employee ID: ' + mostBusy.employeeId}">Position</div>
         </div>
+        <div class="hero-count">
+            <div class="hero-count-label">Appointments</div>
+            <div class="hero-count-val" th:text="${mostBusy.appointmentCount}">0</div>
+        </div>
     </div>
     <div th:if="${mostBusy == null}" style="color:var(--brown-l); margin-bottom:32px; font-size:14px;">
         No appointment data available yet.
     </div>
 
-    <!-- Certifications Expiring This Month -->
     <div class="section-label">Physician Certifications</div>
     <div class="table-card">
         <table>
             <thead>
             <tr>
-                <th>Physician</th><th>Position</th><th>Procedure</th><th>Certified On</th><th>Expires On</th><th>Alert</th>
+                <th>Physician</th><th>Position</th><th>Procedure</th><th>Certified On</th><th>Expires On</th><th>Status</th>
             </tr>
             </thead>
             <tbody>
+            <!--
+                expiringCerts is List<ExpiringCertificationDTO>
+                Fields: physicianId, treatmentCode, physicianName, physicianPosition,
+                        treatmentName, treatmentCost, certificationDate, certificationExpires
+            -->
             <tr th:each="t : ${expiringCerts}">
-                <td th:text="${t.physician != null ? t.physician.name : 'N/A'}"></td>
-                <td th:text="${t.physician != null ? t.physician.position : '—'}"></td>
-                <td th:text="${t.treatment != null ? t.treatment.name : 'N/A'}"></td>
+                <td th:text="${t.physicianName != null ? t.physicianName : 'N/A'}"></td>
+                <td th:text="${t.physicianPosition != null ? t.physicianPosition : '—'}"></td>
+                <td th:text="${t.treatmentName != null ? t.treatmentName : 'N/A'}"></td>
                 <td th:text="${t.certificationDate}"></td>
                 <td th:text="${t.certificationExpires}"></td>
-                <td><span class="badge-expiring">Expiring Soon</span></td>
+                <td><span class="badge-expiring">Certified</span></td>
             </tr>
             <tr th:if="${expiringCerts.isEmpty()}">
-                <td colspan="6" class="empty">No certifications expiring this month.</td>
+                <td colspan="6" class="empty">No certification records found.</td>
             </tr>
             </tbody>
         </table>

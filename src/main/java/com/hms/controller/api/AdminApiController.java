@@ -1,6 +1,8 @@
 package com.hms.controller.api;
 
-import com.hms.entity.Undergoes;
+import com.hms.dto.view.admin.AdminDashboardDTO;
+import com.hms.dto.view.admin.AdminProcedureDTO;
+import com.hms.exception.BadRequestException;
 import com.hms.service.module.admin.AdminModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,31 +19,31 @@ public class AdminApiController {
     @Autowired
     private AdminModuleService adminModuleService;
 
-
+    // GET /hospital/status
     @GetMapping("/hospital/status")
-    public ResponseEntity<Map<String, Object>> getHospitalStatus() {
+    public ResponseEntity<AdminDashboardDTO> getHospitalStatus() {
         return ResponseEntity.ok(adminModuleService.getHospitalStatus());
     }
 
-
+    // GET /api/reports/revenue
     @GetMapping("/api/reports/revenue")
     public ResponseEntity<Double> getTotalRevenue() {
         return ResponseEntity.ok(adminModuleService.getTotalRevenue());
     }
 
+    // GET /procedures?patientId={id}
     @GetMapping("/procedures")
-    public ResponseEntity<List<Undergoes>> getProceduresByPatient(
+    public ResponseEntity<List<AdminProcedureDTO>> getProceduresByPatient(
             @RequestParam Integer patientId) {
+        if (patientId == null || patientId <= 0) {
+            throw new BadRequestException("patientId must be a positive integer");
+        }
         return ResponseEntity.ok(adminModuleService.getProceduresByPatient(patientId));
     }
 
-
+    // GET /api/departments/doctor-count
     @GetMapping("/api/departments/doctor-count")
     public ResponseEntity<Map<String, Long>> getDoctorCountPerDepartment() {
         return ResponseEntity.ok(adminModuleService.getDoctorCountPerDepartment());
     }
-
-
-
-
 }

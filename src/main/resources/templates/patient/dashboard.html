@@ -77,12 +77,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="stay : ${admittedPatients}">
-                <td th:text="${stay.patient != null ? stay.patient.name : 'N/A'}"></td>
-                <td th:text="${stay.patient != null ? stay.patient.ssn : '—'}"></td>
-                <td><span class="badge-room" th:text="${stay.room != null ? 'Room ' + stay.room.roomNumber : '—'}"></span></td>
-                <td th:text="${stay.room != null ? stay.room.roomType : '—'}"></td>
-                <td th:text="${stay.stayStart}"></td>
+            <!--
+                admittedPatients is List<AdmittedPatientDTO>
+                Fields: patientSsn, patientName, patientPhone, patientAddress,
+                        pcpId, pcpName, stayId, stayStart, stayEnd,
+                        roomNumber, roomType
+            -->
+            <tr th:each="p : ${admittedPatients}">
+                <td th:text="${p.patientName != null ? p.patientName : 'N/A'}"></td>
+                <td th:text="${p.patientSsn != null ? p.patientSsn : '—'}"></td>
+                <td><span class="badge-room" th:text="${p.roomNumber != null ? 'Room ' + p.roomNumber : '—'}"></span></td>
+                <td th:text="${p.roomType != null ? p.roomType : '—'}"></td>
+                <td th:text="${p.stayStart}"></td>
                 <td><span class="badge-admitted">Admitted</span></td>
             </tr>
             <tr th:if="${admittedPatients.isEmpty()}">
@@ -101,12 +107,19 @@
             </tr>
             </thead>
             <tbody>
+            <!--
+                recentProcedures is List<RecentProcedureDTO>
+                Fields: patientSsn, procedureCode, stayId, dateUndergoes,
+                        patientName, procedureName, procedureCost,
+                        physicianId, physicianName,
+                        assistingNurseId, assistingNurseName
+            -->
             <tr th:each="u : ${recentProcedures}">
-                <td th:text="${u.patient != null ? u.patient.name : 'N/A'}"></td>
-                <td th:text="${u.procedures != null ? u.procedures.name : 'N/A'}"></td>
-                <td th:text="${u.procedures != null ? '₹' + u.procedures.cost : '—'}"></td>
-                <td th:text="${u.physician != null ? u.physician.name : 'N/A'}"></td>
-                <td th:text="${u.id.dateUndergoes}"></td>
+                <td th:text="${u.patientName != null ? u.patientName : 'N/A'}"></td>
+                <td th:text="${u.procedureName != null ? u.procedureName : 'N/A'}"></td>
+                <td th:text="${u.procedureCost != null ? '₹' + u.procedureCost : '—'}"></td>
+                <td th:text="${u.physicianName != null ? u.physicianName : 'N/A'}"></td>
+                <td th:text="${u.dateUndergoes}"></td>
             </tr>
             <tr th:if="${recentProcedures.isEmpty()}">
                 <td colspan="5" class="empty">No procedures in the last 30 days.</td>

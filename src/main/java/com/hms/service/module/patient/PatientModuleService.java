@@ -1,13 +1,15 @@
 package com.hms.service.module.patient;
 
-import com.hms.entity.Stay;
-import com.hms.entity.Undergoes;
+import com.hms.dto.view.patient.AdmittedPatientDTO;
+import com.hms.dto.view.patient.RecentProcedureDTO;
 
 import java.util.List;
 
 public interface PatientModuleService {
 
-    List<Stay> getCurrentlyAdmittedPatients();
+    // GET /api/patients/currently-admitted
+    List<AdmittedPatientDTO> getCurrentlyAdmittedPatients();
 
-    List<Undergoes> getRecentProcedures();
+    // GET /api/patients/recent-procedures
+    List<RecentProcedureDTO> getRecentProcedures();
 }
