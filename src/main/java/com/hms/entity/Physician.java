@@ -2,15 +2,14 @@ package com.hms.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "physician")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Physician {
 
     @Id
