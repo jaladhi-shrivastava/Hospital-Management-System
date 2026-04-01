@@ -1,8 +1,9 @@
 package com.hms.controller.api;
 
-import com.hms.entity.Patient;
-import com.hms.entity.Physician;
-import com.hms.entity.TrainedIn;
+import com.hms.dto.view.physician.CertifiedDoctorDTO;
+import com.hms.dto.view.physician.ExpiringCertificationDTO;
+import com.hms.dto.view.physician.MostBusyPhysicianDTO;
+import com.hms.dto.view.physician.PhysicianPatientDTO;
 import com.hms.service.module.physician.PhysicianModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,41 +19,31 @@ public class PhysicianApiController {
     @Autowired
     private PhysicianModuleService physicianModuleService;
 
-    // GET /api/physicians/certification-expiring
-    // Returns TrainedIn records expiring within the current calendar month
-    // Each record carries the Physician and Procedures (treatment) objects
-    @GetMapping("/api/physicians/certification-expiring")
-    public ResponseEntity<List<TrainedIn>> getCertificationExpiring() {
-        return ResponseEntity.ok(
-                physicianModuleService.getPhysiciansCertifications()
-        );
+    // GET /api/physicians/most-busy
+    @GetMapping("/api/physicians/most-busy")
+    public ResponseEntity<MostBusyPhysicianDTO> getMostBusy() {
+        MostBusyPhysicianDTO result = physicianModuleService.getMostBusyPhysician();
+        if (result == null) return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(result);
     }
 
-    // GET /api/physicians/most-busy
-    // Returns the single Physician with the highest appointment count
-    @GetMapping("/api/physicians/most-busy")
-    public ResponseEntity<Physician> getMostBusy() {
-        Physician physician = physicianModuleService.getMostBusyPhysician();
-        if (physician == null) return ResponseEntity.noContent().build();
-        return ResponseEntity.ok(physician);
+    // GET /api/physicians/certification-expiring
+    @GetMapping("/api/physicians/certification-expiring")
+    public ResponseEntity<List<ExpiringCertificationDTO>> getCertificationExpiring() {
+        return ResponseEntity.ok(physicianModuleService.getPhysiciansCertifications());
     }
 
     // GET /api/physicians/{id}/patients
-    // Returns all distinct Patient records who have appointments with this physician
     @GetMapping("/api/physicians/{id}/patients")
-    public ResponseEntity<List<Patient>> getPatientsByPhysician(@PathVariable Integer id) {
-        return ResponseEntity.ok(
-                physicianModuleService.getPatientsByPhysician(id)
-        );
+    public ResponseEntity<List<PhysicianPatientDTO>> getPatientsByPhysician(
+            @PathVariable Integer id) {
+        return ResponseEntity.ok(physicianModuleService.getPatientsByPhysician(id));
     }
 
     // GET /api/procedures/{id}/certified-doctors
-    // Returns all TrainedIn records for the given procedure code
-    // Each record carries the Physician certified for that procedure
     @GetMapping("/api/procedures/{id}/certified-doctors")
-    public ResponseEntity<List<TrainedIn>> getCertifiedDoctors(@PathVariable Integer id) {
-        return ResponseEntity.ok(
-                physicianModuleService.getCertifiedDoctorsForProcedure(id)
-        );
+    public ResponseEntity<List<CertifiedDoctorDTO>> getCertifiedDoctors(
+            @PathVariable Integer id) {
+        return ResponseEntity.ok(physicianModuleService.getCertifiedDoctorsForProcedure(id));
     }
 }
