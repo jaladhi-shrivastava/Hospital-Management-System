@@ -15,9 +15,7 @@ public class PhysicianViewController {
     @Autowired
     private PhysicianModuleService physicianModuleService;
 
-    // GET /physicians/dashboard
-    // mostBusy is now MostBusyPhysicianDTO — update th:text in template accordingly
-    // expiringCerts is now List<ExpiringCertificationDTO>
+
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("mostBusy",
@@ -27,8 +25,7 @@ public class PhysicianViewController {
         return "physician/dashboard";
     }
 
-    // GET /physicians/{id}/patients
-    // patients is now List<PhysicianPatientDTO>
+
     @GetMapping("/{id}/patients")
     public String patientsByPhysician(@PathVariable Integer id, Model model) {
         model.addAttribute("patients",
@@ -37,8 +34,7 @@ public class PhysicianViewController {
         return "physician/patients";
     }
 
-    // GET /physicians/procedures/{id}/certified-doctors
-    // certifiedDoctors is now List<CertifiedDoctorDTO>
+
     @GetMapping("/procedures/{id}/certified-doctors")
     public String certifiedDoctors(@PathVariable Integer id, Model model) {
         model.addAttribute("certifiedDoctors",

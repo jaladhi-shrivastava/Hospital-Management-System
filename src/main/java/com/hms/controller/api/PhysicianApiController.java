@@ -19,7 +19,7 @@ public class PhysicianApiController {
     @Autowired
     private PhysicianModuleService physicianModuleService;
 
-    // GET /api/physicians/most-busy
+
     @GetMapping("/api/physicians/most-busy")
     public ResponseEntity<MostBusyPhysicianDTO> getMostBusy() {
         MostBusyPhysicianDTO result = physicianModuleService.getMostBusyPhysician();
@@ -27,20 +27,20 @@ public class PhysicianApiController {
         return ResponseEntity.ok(result);
     }
 
-    // GET /api/physicians/certification-expiring
+
     @GetMapping("/api/physicians/certification-expiring")
     public ResponseEntity<List<ExpiringCertificationDTO>> getCertificationExpiring() {
         return ResponseEntity.ok(physicianModuleService.getPhysiciansCertifications());
     }
 
-    // GET /api/physicians/{id}/patients
+
     @GetMapping("/api/physicians/{id}/patients")
     public ResponseEntity<List<PhysicianPatientDTO>> getPatientsByPhysician(
             @PathVariable Integer id) {
         return ResponseEntity.ok(physicianModuleService.getPatientsByPhysician(id));
     }
 
-    // GET /api/procedures/{id}/certified-doctors
+
     @GetMapping("/api/procedures/{id}/certified-doctors")
     public ResponseEntity<List<CertifiedDoctorDTO>> getCertifiedDoctors(
             @PathVariable Integer id) {

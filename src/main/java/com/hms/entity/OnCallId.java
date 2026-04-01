@@ -1,10 +1,10 @@
 package com.hms.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Embeddable
 @Data
@@ -21,4 +21,10 @@ public class OnCallId implements Serializable {
 
     @Column(name = "BlockCode")
     private Integer blockCode;
+
+    @Column(name = "OnCallStart")
+    private LocalDateTime onCallStart;
+
+    @Column(name = "OnCallEnd")
+    private LocalDateTime onCallEnd;
 }

@@ -16,13 +16,13 @@ public class AppointmentApiController {
     @Autowired
     private AppointmentModuleService appointmentModuleService;
 
-    // GET /api/rooms/occupied
+
     @GetMapping("/api/rooms/occupied")
     public ResponseEntity<List<OccupiedRoomDTO>> getOccupiedRooms() {
         return ResponseEntity.ok(appointmentModuleService.getOccupiedRooms());
     }
 
-    // GET /api/nurses/on-call
+
     @GetMapping("/api/nurses/on-call")
     public ResponseEntity<List<NurseOnCallDTO>> getNursesOnCall() {
         return ResponseEntity.ok(appointmentModuleService.getNursesOnCall());

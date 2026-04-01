@@ -7,18 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 @Repository
 public interface OnCallRepository extends JpaRepository<OnCall, OnCallId> {
 
     // Used by AppointmentModule: nurses currently on call
-    @Query("SELECT o FROM OnCall o " +
-            "LEFT JOIN FETCH o.nurse " +
-            "LEFT JOIN FETCH o.block " +
-            "WHERE o.onCallStart <= :now AND o.onCallEnd >= :now")
-    List<OnCall> findCurrentlyOnCall(@Param("now") LocalDateTime now);
+    @Query("SELECT o FROM OnCall o LEFT JOIN FETCH o.nurse LEFT JOIN FETCH o.block ")
+    List<OnCall> findCurrentlyOnCall();
 
     // Used by existing OnCallService/Controller: find by nurse ID
     @Query("SELECT o FROM OnCall o " +

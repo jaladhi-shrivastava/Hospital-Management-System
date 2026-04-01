@@ -14,8 +14,6 @@ public class AppointmentViewController {
     @Autowired
     private AppointmentModuleService appointmentModuleService;
 
-    // GET /appointments/dashboard
-    // Shows: occupied rooms + nurses currently on call
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("occupiedRooms",

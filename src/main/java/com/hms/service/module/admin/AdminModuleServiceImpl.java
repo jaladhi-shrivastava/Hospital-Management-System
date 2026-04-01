@@ -37,8 +37,7 @@ public class AdminModuleServiceImpl implements AdminModuleService {
     @Autowired
     private StayRepository stayRepository;
 
-    // GET /hospital/status
-    // Wraps all hospital-wide counts into AdminDashboardDTO
+
     @Override
     @Transactional(readOnly = true)
     public AdminDashboardDTO getHospitalStatus() {
@@ -54,8 +53,7 @@ public class AdminModuleServiceImpl implements AdminModuleService {
         return new AdminDashboardDTO(revenue, deptCounts, statusMap);
     }
 
-    // GET /api/reports/revenue
-    // Sums cost of all procedures via Undergoes
+
     @Override
     @Transactional(readOnly = true)
     public Double getTotalRevenue() {
@@ -66,8 +64,7 @@ public class AdminModuleServiceImpl implements AdminModuleService {
                 .sum();
     }
 
-    // GET /procedures?patientId={id}
-    // Maps Undergoes records for a patient to AdminProcedureDTO
+
     @Override
     @Transactional(readOnly = true)
     public List<AdminProcedureDTO> getProceduresByPatient(Integer patientSsn) {
@@ -92,8 +89,7 @@ public class AdminModuleServiceImpl implements AdminModuleService {
                 .toList();
     }
 
-    // GET /api/departments/doctor-count
-    // Groups AffiliatedWith by department and counts physicians
+
     @Override
     @Transactional(readOnly = true)
     public Map<String, Long> getDoctorCountPerDepartment() {

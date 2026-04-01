@@ -19,19 +19,19 @@ public class AdminApiController {
     @Autowired
     private AdminModuleService adminModuleService;
 
-    // GET /hospital/status
+
     @GetMapping("/hospital/status")
     public ResponseEntity<AdminDashboardDTO> getHospitalStatus() {
         return ResponseEntity.ok(adminModuleService.getHospitalStatus());
     }
 
-    // GET /api/reports/revenue
+
     @GetMapping("/api/reports/revenue")
     public ResponseEntity<Double> getTotalRevenue() {
         return ResponseEntity.ok(adminModuleService.getTotalRevenue());
     }
 
-    // GET /procedures?patientId={id}
+
     @GetMapping("/procedures")
     public ResponseEntity<List<AdminProcedureDTO>> getProceduresByPatient(
             @RequestParam Integer patientId) {
@@ -41,7 +41,7 @@ public class AdminApiController {
         return ResponseEntity.ok(adminModuleService.getProceduresByPatient(patientId));
     }
 
-    // GET /api/departments/doctor-count
+
     @GetMapping("/api/departments/doctor-count")
     public ResponseEntity<Map<String, Long>> getDoctorCountPerDepartment() {
         return ResponseEntity.ok(adminModuleService.getDoctorCountPerDepartment());

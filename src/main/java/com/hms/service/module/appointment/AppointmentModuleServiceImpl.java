@@ -27,8 +27,7 @@ public class AppointmentModuleServiceImpl implements AppointmentModuleService {
     @Autowired
     private OnCallRepository onCallRepository;
 
-    // GET /api/rooms/occupied
-    // Maps each active Stay to OccupiedRoomDTO
+
     @Override
     @Transactional(readOnly = true)
     public List<OccupiedRoomDTO> getOccupiedRooms() {
@@ -50,12 +49,10 @@ public class AppointmentModuleServiceImpl implements AppointmentModuleService {
                 .toList();
     }
 
-    // GET /api/nurses/on-call
-    // Maps each OnCall record to NurseOnCallDTO
     @Override
     @Transactional(readOnly = true)
     public List<NurseOnCallDTO> getNursesOnCall() {
-        List<OnCall> onCalls = onCallRepository.findCurrentlyOnCall(LocalDateTime.now());
+        List<OnCall> onCalls = onCallRepository.findCurrentlyOnCall();
         return onCalls.stream()
                 .map(o -> new NurseOnCallDTO(
                         o.getId().getNurse(),
@@ -64,13 +61,12 @@ public class AppointmentModuleServiceImpl implements AppointmentModuleService {
                         o.getNurse() != null ? o.getNurse().getName() : null,
                         o.getNurse() != null ? o.getNurse().getPosition() : null,
                         o.getNurse() != null ? o.getNurse().getRegistered() : null,
-                        o.getOnCallStart(),
-                        o.getOnCallEnd()
+                        o.getId().getOnCallStart(),
+                        o.getId().getOnCallEnd()
                 ))
                 .toList();
     }
 
-    // Used by AppointmentViewController — returns raw Appointment entities for Thymeleaf
     @Override
     @Transactional(readOnly = true)
     public List<Appointment> getAppointmentsByPhysician(Integer physicianId) {

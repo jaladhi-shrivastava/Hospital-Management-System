@@ -1,6 +1,5 @@
 package com.hms.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +8,6 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Medication {
 
     @Id
@@ -22,6 +20,6 @@ public class Medication {
     @Column(name = "Brand", length = 30)
     private String brand;
 
-    @Column(name = "Description", length = 100)
+    @Column(name = "Description", length = 30)
     private String description;
 }

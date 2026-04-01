@@ -3,6 +3,7 @@ package com.hms.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 @Entity
 @Table(name = "prescribes")
 @Data
@@ -26,7 +27,7 @@ public class Prescribes {
     private Medication medication;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Appointment")
+    @JoinColumn(name = "Appointment", referencedColumnName = "AppointmentID")
     private Appointment appointment;
 
     @Column(name = "Dose", length = 30)
