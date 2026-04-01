@@ -1,4 +1,4 @@
-package com.hms.service.module;
+package com.hms.service.module.prescription;
 
 import com.hms.entity.Prescribes;
 import com.hms.service.module.prescription.PrescriptionModuleService;
