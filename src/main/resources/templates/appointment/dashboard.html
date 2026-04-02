@@ -156,6 +156,36 @@
       from { opacity: 0; transform: translateY(30px) scale(0.96); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 14px;
+      flex-wrap: wrap;
+    }
+
+    .pagination span {
+      display: flex;
+      gap: 10px;
+    }
+
+    .pagination a {
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--brown-m);
+      border: 1px solid rgba(240,200,160,0.6);
+      background: rgba(255,255,255,0.6);
+    }
+
+    .pagination a.active {
+      background: var(--c1);
+      color: var(--brown);
+    }
   </style>
 </head>
 
@@ -189,11 +219,11 @@
   <div class="summary-row">
     <div class="sum-card">
       <div class="sum-label">Occupied Rooms</div>
-      <div class="sum-value" th:text="${occupiedRooms.size()}">0</div>
+      <div class="sum-value" th:text="${totalOccupiedRooms}">0</div>
     </div>
     <div class="sum-card">
       <div class="sum-label">Nurses On Call</div>
-      <div class="sum-value" th:text="${nursesOnCall.size()}">0</div>
+      <div class="sum-value" th:text="${totalNursesOnCall}">0</div>
     </div>
   </div>
 
@@ -217,6 +247,26 @@
           </tr>
           </tbody>
         </table>
+
+
+        <div class="pagination">
+          <a th:if="${roomCurrentPage > 0}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage - 1}, nursePage=${nurseCurrentPage}, size=${size})}">
+            Prev
+          </a>
+
+          <span th:each="i : ${#numbers.sequence(0, roomTotalPages - 1)}">
+    <a th:href="@{/appointments/dashboard(roomPage=${i}, nursePage=${nurseCurrentPage}, size=${size})}"
+       th:text="${i + 1}"
+       th:classappend="${i == roomCurrentPage} ? ' active' : ''">
+    </a>
+  </span>
+
+          <a th:if="${roomCurrentPage < roomTotalPages - 1}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage + 1}, nursePage=${nurseCurrentPage}, size=${size})}">
+            Next
+          </a>
+        </div>
       </div>
     </div>
 
@@ -239,6 +289,25 @@
           </tr>
           </tbody>
         </table>
+
+        <div class="pagination">
+          <a th:if="${nurseCurrentPage > 0}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${nurseCurrentPage - 1}, size=${size})}">
+            Prev
+          </a>
+
+          <span th:each="i : ${#numbers.sequence(0, nurseTotalPages - 1)}">
+    <a th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${i}, size=${size})}"
+       th:text="${i + 1}"
+       th:classappend="${i == nurseCurrentPage} ? ' active' : ''">
+    </a>
+  </span>
+
+          <a th:if="${nurseCurrentPage < nurseTotalPages - 1}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${nurseCurrentPage + 1}, size=${size})}">
+            Next
+          </a>
+        </div>
       </div>
     </div>
   </div>
