@@ -1,9 +1,9 @@
 package com.hms.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "department")
@@ -20,7 +20,6 @@ public class Department {
     @Column(name = "Name", length = 30)
     private String name;
 
-    // Head physician of this department
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Head", referencedColumnName = "EmployeeID")
