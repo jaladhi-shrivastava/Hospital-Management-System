@@ -166,6 +166,41 @@
             from { opacity: 0; transform: translateY(30px) scale(0.96); }
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0 16px;
+            flex-wrap: wrap;
+        }
+
+        .pagination span {
+            display: flex;
+            gap: 10px;
+        }
+
+        .pagination a {
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--brown-m);
+            border: 1px solid rgba(240,200,160,0.6);
+            background: rgba(255,255,255,0.6);
+            transition: 0.2s ease;
+        }
+
+        .pagination a:hover {
+            background: rgba(248,233,161,0.55);
+        }
+
+        .pagination a.active {
+            background: var(--c1);
+            color: var(--brown);
+        }
     </style>
 </head>
 
@@ -208,15 +243,24 @@
             <div class="hero-count-val" th:text="${mostBusy.appointmentCount}">0</div>
         </div>
     </div>
+
     <div th:if="${mostBusy == null}" style="color:var(--brown-l); margin-bottom:32px; font-size:14px;">
         No appointment data available yet.
     </div>
 
     <div class="section-label">Physician Certifications</div>
+
     <div class="table-card">
         <table>
             <thead>
-            <tr><th>Physician</th><th>Position</th><th>Procedure</th><th>Certified On</th><th>Expires On</th><th>Status</th></tr>
+            <tr>
+                <th>Physician</th>
+                <th>Position</th>
+                <th>Procedure</th>
+                <th>Certified On</th>
+                <th>Expires On</th>
+                <th>Status</th>
+            </tr>
             </thead>
             <tbody>
             <tr th:each="t : ${expiringCerts}">
@@ -232,6 +276,25 @@
             </tr>
             </tbody>
         </table>
+
+        <div class="pagination" th:if="${certTotalPages > 1}">
+            <a th:if="${certCurrentPage > 0}"
+               th:href="@{/physicians/dashboard(certPage=${certCurrentPage - 1}, size=${size})}">
+                Prev
+            </a>
+
+            <span th:each="i : ${#numbers.sequence(0, certTotalPages - 1)}">
+                <a th:href="@{/physicians/dashboard(certPage=${i}, size=${size})}"
+                   th:text="${i + 1}"
+                   th:classappend="${i == certCurrentPage} ? ' active' : ''">
+                </a>
+            </span>
+
+            <a th:if="${certCurrentPage < certTotalPages - 1}"
+               th:href="@{/physicians/dashboard(certPage=${certCurrentPage + 1}, size=${size})}">
+                Next
+            </a>
+        </div>
     </div>
 </main>
 

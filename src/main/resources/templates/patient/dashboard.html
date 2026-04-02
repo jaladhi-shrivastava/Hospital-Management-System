@@ -158,6 +158,33 @@
             from { opacity: 0; transform: translateY(30px) scale(0.96); }
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 18px 0 10px;
+        }
+
+        .pagination a {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--brown-m);
+            border: 1px solid rgba(240,200,160,0.6);
+            background: rgba(255,255,255,0.6);
+            transition: all 0.2s ease;
+        }
+
+        .pagination a:hover {
+            background: var(--peach);
+        }
+
+        .pagination a.active {
+            background: var(--c1);
+            color: var(--brown);
+        }
     </style>
 </head>
 
@@ -219,6 +246,29 @@
             </tr>
             </tbody>
         </table>
+        <div class="pagination">
+
+            <!-- Previous -->
+            <a th:if="${admittedCurrentPage > 0}"
+               th:href="@{/patients/dashboard(admittedPage=${admittedCurrentPage-1}, procedurePage=${procedureCurrentPage})}">
+                Prev
+            </a>
+
+            <!-- Page Numbers -->
+            <span th:each="i : ${#numbers.sequence(0, admittedTotalPages-1)}">
+        <a th:href="@{/patients/dashboard(admittedPage=${i}, procedurePage=${procedureCurrentPage})}"
+           th:text="${i+1}"
+           th:classappend="${i==admittedCurrentPage} ? 'active'">
+        </a>
+    </span>
+
+            <!-- Next -->
+            <a th:if="${admittedCurrentPage < admittedTotalPages-1}"
+               th:href="@{/patients/dashboard(admittedPage=${admittedCurrentPage+1}, procedurePage=${procedureCurrentPage})}">
+                Next
+            </a>
+
+        </div>
     </div>
 
     <div class="section-label">Recent Procedures (Last 30 Days)</div>
@@ -240,6 +290,29 @@
             </tr>
             </tbody>
         </table>
+        <div class="pagination">
+
+            <!-- Previous -->
+            <a th:if="${procedureCurrentPage > 0}"
+               th:href="@{/patients/dashboard(admittedPage=${admittedCurrentPage}, procedurePage=${procedureCurrentPage-1})}">
+                Prev
+            </a>
+
+            <!-- Page Numbers -->
+            <span th:each="i : ${#numbers.sequence(0, procedureTotalPages-1)}">
+        <a th:href="@{/patients/dashboard(admittedPage=${admittedCurrentPage}, procedurePage=${i})}"
+           th:text="${i+1}"
+           th:classappend="${i==procedureCurrentPage} ? 'active'">
+        </a>
+    </span>
+
+            <!-- Next -->
+            <a th:if="${procedureCurrentPage < procedureTotalPages-1}"
+               th:href="@{/patients/dashboard(admittedPage=${admittedCurrentPage}, procedurePage=${procedureCurrentPage+1})}">
+                Next
+            </a>
+
+        </div>
     </div>
 </main>
 
