@@ -2,6 +2,7 @@ package com.hms.repository;
 
 import com.hms.entity.Appointment;
 import com.hms.entity.Patient;
+import com.hms.entity.Physician;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,6 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
 
-
     @Query("SELECT a FROM Appointment a " +
             "LEFT JOIN FETCH a.patient " +
             "LEFT JOIN FETCH a.prepNurse " +
@@ -20,11 +20,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             "WHERE a.physician.employeeId = :physicianId")
     List<Appointment> findByPhysicianId(@Param("physicianId") Integer physicianId);
 
-    @Query("SELECT a.physician, COUNT(a) as cnt FROM Appointment a " +
-            "GROUP BY a.physician.employeeId, a.physician.name, a.physician.position, a.physician.ssn " +
+
+    @Query("SELECT a.physician.employeeId, COUNT(a) as cnt FROM Appointment a " +
+            "GROUP BY a.physician.employeeId " +
             "ORDER BY cnt DESC")
     List<Object[]> findPhysicianAppointmentCounts();
-
 
     @Query("SELECT DISTINCT a.patient FROM Appointment a " +
             "WHERE a.physician.employeeId = :physicianId")

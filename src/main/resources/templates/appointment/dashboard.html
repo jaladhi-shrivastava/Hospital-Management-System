@@ -50,13 +50,12 @@
     <a th:href="@{/patients/dashboard}">Patients</a>
     <a th:href="@{/physicians/dashboard}">Physicians</a>
     <a th:href="@{/appointments/dashboard}" class="active">Appointments</a>
-    <a th:href="@{/prescriptions/dashboard}">Prescriptions</a>
   </div>
 </nav>
 <main>
   <div class="page-title">Appointments &amp; Ward Status</div>
   <div class="page-sub">Live view of occupied rooms and nurses currently on call</div>
-  <div class="api-badge"><div class="api-dot"></div>Implementing: GET /api/rooms/occupied &nbsp;·&nbsp; GET /api/nurses/on-call</div>
+  <div class="api-badge"><div class="api-dot"></div>Implementing: GET /api/rooms/occupied </div>
 
   <div class="summary-row">
     <div class="sum-card">
@@ -78,12 +77,7 @@
           <tr><th>Room</th><th>Patient</th><th>Since</th><th>Status</th></tr>
           </thead>
           <tbody>
-          <!--
-              occupiedRooms is List<OccupiedRoomDTO>
-              Fields: roomNumber, roomType, blockFloor, blockCode,
-                      stayId, stayStart, stayEnd,
-                      patientSsn, patientName
-          -->
+
           <tr th:each="room : ${occupiedRooms}">
             <td th:text="${room.roomNumber != null ? 'Room ' + room.roomNumber : '—'}"></td>
             <td th:text="${room.patientName != null ? room.patientName : 'N/A'}"></td>
@@ -106,12 +100,7 @@
           <tr><th>Nurse</th><th>Block</th><th>Shift Start</th><th>Status</th></tr>
           </thead>
           <tbody>
-          <!--
-              nursesOnCall is List<NurseOnCallDTO>
-              Fields: nurseId, blockFloor, blockCode,
-                      nurseName, nursePosition, registered,
-                      onCallStart, onCallEnd
-          -->
+
           <tr th:each="nurse : ${nursesOnCall}">
             <td th:text="${nurse.nurseName != null ? nurse.nurseName : 'N/A'}"></td>
             <td th:text="${'F' + nurse.blockFloor + ' · B' + nurse.blockCode}"></td>

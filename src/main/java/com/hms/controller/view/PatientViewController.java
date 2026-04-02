@@ -17,7 +17,7 @@ public class PatientViewController {
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
         model.addAttribute("admittedPatients",
-                patientModuleService.getCurrentlyAdmittedPatients());
+                patientModuleService.getAdmittedPatients());
 
         model.addAttribute("recentProcedures",
                 patientModuleService.getRecentProcedures());

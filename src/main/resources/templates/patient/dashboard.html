@@ -49,7 +49,6 @@
         <a th:href="@{/patients/dashboard}" class="active">Patients</a>
         <a th:href="@{/physicians/dashboard}">Physicians</a>
         <a th:href="@{/appointments/dashboard}">Appointments</a>
-        <a th:href="@{/prescriptions/dashboard}">Prescriptions</a>
     </div>
 </nav>
 <main>
@@ -77,12 +76,7 @@
             </tr>
             </thead>
             <tbody>
-            <!--
-                admittedPatients is List<AdmittedPatientDTO>
-                Fields: patientSsn, patientName, patientPhone, patientAddress,
-                        pcpId, pcpName, stayId, stayStart, stayEnd,
-                        roomNumber, roomType
-            -->
+
             <tr th:each="p : ${admittedPatients}">
                 <td th:text="${p.patientName != null ? p.patientName : 'N/A'}"></td>
                 <td th:text="${p.patientSsn != null ? p.patientSsn : '—'}"></td>
@@ -107,13 +101,7 @@
             </tr>
             </thead>
             <tbody>
-            <!--
-                recentProcedures is List<RecentProcedureDTO>
-                Fields: patientSsn, procedureCode, stayId, dateUndergoes,
-                        patientName, procedureName, procedureCost,
-                        physicianId, physicianName,
-                        assistingNurseId, assistingNurseName
-            -->
+
             <tr th:each="u : ${recentProcedures}">
                 <td th:text="${u.patientName != null ? u.patientName : 'N/A'}"></td>
                 <td th:text="${u.procedureName != null ? u.procedureName : 'N/A'}"></td>

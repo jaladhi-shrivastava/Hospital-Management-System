@@ -8,7 +8,7 @@ import java.util.List;
 public interface PatientModuleService {
 
     // GET /api/patients/currently-admitted
-    List<AdmittedPatientDTO> getCurrentlyAdmittedPatients();
+    List<AdmittedPatientDTO> getAdmittedPatients();
 
     // GET /api/patients/recent-procedures
     List<RecentProcedureDTO> getRecentProcedures();

@@ -8,6 +8,7 @@ import com.hms.entity.Patient;
 import com.hms.entity.Physician;
 import com.hms.entity.TrainedIn;
 import com.hms.repository.AppointmentRepository;
+import com.hms.repository.PhysicianRepository;
 import com.hms.repository.TrainedInRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,9 @@ public class PhysicianModuleServiceImpl implements PhysicianModuleService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-    // GET /api/physicians/most-busy
-    // Gets grouped appointment counts, maps first result to DTO including count
+    @Autowired
+    private PhysicianRepository physicianRepository;
+
     @Override
     @Transactional(readOnly = true)
     public MostBusyPhysicianDTO getMostBusyPhysician() {
@@ -33,8 +35,12 @@ public class PhysicianModuleServiceImpl implements PhysicianModuleService {
         if (results == null || results.isEmpty()) return null;
 
         Object[] top = results.get(0);
-        Physician physician = (Physician) top[0];
-        Long count = (Long) top[1];
+        // Query now returns physicianId (Integer) and count (Long)
+        Integer physicianId = ((Number) top[0]).intValue();
+        Long count = ((Number) top[1]).longValue();
+
+        Physician physician = physicianRepository.findById(physicianId).orElse(null);
+        if (physician == null) return null;
 
         return new MostBusyPhysicianDTO(
                 physician.getEmployeeId(),
@@ -44,8 +50,6 @@ public class PhysicianModuleServiceImpl implements PhysicianModuleService {
         );
     }
 
-    // GET /api/physicians/certification-expiring
-    // Returns all certifications (broadened from monthly filter due to historical data)
     @Override
     @Transactional(readOnly = true)
     public List<ExpiringCertificationDTO> getPhysiciansCertifications() {
@@ -64,8 +68,6 @@ public class PhysicianModuleServiceImpl implements PhysicianModuleService {
                 .toList();
     }
 
-    // GET /api/physicians/{id}/patients
-    // Maps each Patient to PhysicianPatientDTO
     @Override
     @Transactional(readOnly = true)
     public List<PhysicianPatientDTO> getPatientsByPhysician(Integer physicianId) {
@@ -87,8 +89,6 @@ public class PhysicianModuleServiceImpl implements PhysicianModuleService {
                 .toList();
     }
 
-    // GET /api/procedures/{id}/certified-doctors
-    // Maps each TrainedIn to CertifiedDoctorDTO
     @Override
     @Transactional(readOnly = true)
     public List<CertifiedDoctorDTO> getCertifiedDoctorsForProcedure(Integer procedureCode) {

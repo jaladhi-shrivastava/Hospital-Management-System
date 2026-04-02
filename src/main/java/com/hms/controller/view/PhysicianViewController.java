@@ -25,21 +25,4 @@ public class PhysicianViewController {
         return "physician/dashboard";
     }
 
-
-    @GetMapping("/{id}/patients")
-    public String patientsByPhysician(@PathVariable Integer id, Model model) {
-        model.addAttribute("patients",
-                physicianModuleService.getPatientsByPhysician(id));
-        model.addAttribute("physicianId", id);
-        return "physician/patients";
-    }
-
-
-    @GetMapping("/procedures/{id}/certified-doctors")
-    public String certifiedDoctors(@PathVariable Integer id, Model model) {
-        model.addAttribute("certifiedDoctors",
-                physicianModuleService.getCertifiedDoctorsForProcedure(id));
-        model.addAttribute("procedureCode", id);
-        return "physician/certified-doctors";
-    }
 }

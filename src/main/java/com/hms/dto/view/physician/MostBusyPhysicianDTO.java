@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MostBusyPhysicianDTO {
 
-
     private Integer employeeId;
     private String name;
     private String position;

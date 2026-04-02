@@ -9,8 +9,6 @@ import com.hms.repository.UndergoesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,11 +20,10 @@ public class PatientModuleServiceImpl implements PatientModuleService {
     @Autowired
     private UndergoesRepository undergoesRepository;
 
-    // GET /api/patients/currently-admitted
-    // Maps each active Stay to AdmittedPatientDTO
+ 
     @Override
     @Transactional(readOnly = true)
-    public List<AdmittedPatientDTO> getCurrentlyAdmittedPatients() {
+    public List<AdmittedPatientDTO> getAdmittedPatients() {
         List<Stay> stays = stayRepository.findActiveStays();
         return stays.stream()
                 .map(s -> new AdmittedPatientDTO(
@@ -47,14 +44,11 @@ public class PatientModuleServiceImpl implements PatientModuleService {
                 .toList();
     }
 
-    // GET /api/patients/recent-procedures
-    // Maps each Undergoes from last 30 days to RecentProcedureDTO
     @Override
     @Transactional(readOnly = true)
     public List<RecentProcedureDTO> getRecentProcedures() {
-        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
-        List<Undergoes> list = undergoesRepository.findRecentUndergoes(thirtyDaysAgo);
-        return list.stream()
+        return undergoesRepository.findAllWithDetails()
+                .stream()
                 .map(u -> new RecentProcedureDTO(
                         u.getId().getPatient(),
                         u.getId().getProcedures(),
