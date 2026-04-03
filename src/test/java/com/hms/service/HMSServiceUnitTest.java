@@ -8,7 +8,6 @@ import com.hms.dto.view.appointment.OccupiedRoomDTO;
 import com.hms.dto.view.patient.AdmittedPatientDTO;
 import com.hms.dto.view.physician.MostBusyPhysicianDTO;
 import com.hms.entity.*;
-import com.hms.exception.ResourceNotFoundException;
 import com.hms.repository.*;
 import com.hms.service.module.admin.AdminModuleServiceImpl;
 import com.hms.service.module.appointment.AppointmentModuleServiceImpl;
