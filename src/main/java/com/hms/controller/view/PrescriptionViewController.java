@@ -19,7 +19,7 @@ public class PrescriptionViewController {
     public String dashboard(Model model) {
         model.addAttribute("prescriptions",
                 prescriptionModuleService.getAllPrescriptions());
-        return "prescription/dashboard";
+        return "prescriptions/dashboard";
     }
 
     @GetMapping("/by-patient")
@@ -31,7 +31,7 @@ public class PrescriptionViewController {
             model.addAttribute("searchId", patientId);
             model.addAttribute("searchType", "Patient SSN");
         }
-        return "prescription/dashboard";
+        return "prescriptions/dashboard";
     }
 
     @GetMapping("/by-physician")
@@ -43,7 +43,7 @@ public class PrescriptionViewController {
             model.addAttribute("searchId", physicianId);
             model.addAttribute("searchType", "Physician ID");
         }
-        return "prescription/dashboard";
+        return "prescriptions/dashboard";
     }
 
     @GetMapping("/by-appointment")
@@ -55,6 +55,6 @@ public class PrescriptionViewController {
             model.addAttribute("searchId", appointmentId);
             model.addAttribute("searchType", "Appointment ID");
         }
-        return "prescription/dashboard";
+        return "prescriptions/dashboard";
     }
 }
