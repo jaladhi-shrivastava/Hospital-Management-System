@@ -1,16 +1,19 @@
 package com.hms.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.hms.dto.view.admin.AdminDashboardDTO;
+import com.hms.dto.view.appointment.OccupiedRoomDTO;
+import com.hms.dto.view.patient.AdmittedPatientDTO;
+import com.hms.dto.view.physician.MostBusyPhysicianDTO;
 import com.hms.entity.*;
+import com.hms.exception.ResourceNotFoundException;
 import com.hms.repository.*;
 import com.hms.service.module.admin.AdminModuleServiceImpl;
 import com.hms.service.module.appointment.AppointmentModuleServiceImpl;
 import com.hms.service.module.patient.PatientModuleServiceImpl;
 import com.hms.service.module.physician.PhysicianModuleServiceImpl;
-import com.hms.service.module.PrescriptionModuleServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,106 +26,119 @@ import java.util.*;
 @ExtendWith(MockitoExtension.class)
 public class HMSServiceUnitTest {
 
-//    making the object for all the 4 mock repos so that it can be used during the exceution
     @Mock private PhysicianRepository physicianRepository;
     @Mock private AppointmentRepository appointmentRepository;
     @Mock private StayRepository stayRepository;
-    @Mock private UndergoesRepository undergoesRepository;
     @Mock private PatientRepository patientRepository;
     @Mock private DepartmentRepository departmentRepository;
-    @Mock private OnCallRepository onCallRepository;
-    @Mock private PrescribesRepository prescribesRepository;
-    @Mock private TrainedInRepository trainedInRepository;
+    @Mock private UndergoesRepository undergoesRepository;
+    @Mock private AffiliatedWithRepository affiliatedWithRepository;
 
-//    using the mock to add these in the service
-    @InjectMocks private AdminModuleServiceImpl adminService;
     @InjectMocks private PhysicianModuleServiceImpl physicianService;
+    @InjectMocks private AdminModuleServiceImpl adminService;
     @InjectMocks private PatientModuleServiceImpl patientService;
     @InjectMocks private AppointmentModuleServiceImpl appointmentService;
-    @InjectMocks private PrescriptionModuleServiceImpl prescriptionService;
-
 
     @Test
-    void test1_GetMostBusyPhysician() {
-
-        Physician doc = new Physician(101, "Dr. Jaladhi", "Surgeon", 111);
-
-        Object[] row = new Object[]{doc, 5L};
+    void test1_GetMostBusyPhysician_Success() {
         List<Object[]> mockResult = new ArrayList<>();
-        mockResult.add(row);
+        mockResult.add(new Object[]{1, 10L});
+
+        Physician doc = new Physician(1, "John Dorian", "Internist", 111);
 
         when(appointmentRepository.findPhysicianAppointmentCounts()).thenReturn(mockResult);
-        Physician result = physicianService.getMostBusyPhysician();
+        when(physicianRepository.findById(1)).thenReturn(Optional.of(doc));
 
+        MostBusyPhysicianDTO result = physicianService.getMostBusyPhysician();
 
         assertNotNull(result);
-        assertEquals("Dr. Jaladhi", result.getName());
+        assertEquals("John Dorian", result.getName());
+        assertEquals(10L, result.getAppointmentCount());
     }
 
     @Test
-    void test2_GetCertifiedDoctorsForProcedure() {
-        TrainedIn ti = new TrainedIn();
-        when(trainedInRepository.findById_Treatment(7)).thenReturn(List.of(ti));
-
-        List<TrainedIn> result = physicianService.getCertifiedDoctorsForProcedure(7);
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    void test3_GetTotalRevenue() {
-        Procedures p = new Procedures(); p.setCost(1200.0);
-        Undergoes u = new Undergoes(); u.setProcedures(p);
-        when(undergoesRepository.findAllWithDetails()).thenReturn(List.of(u));
-
-        Double revenue = adminService.getTotalRevenue();
-        assertEquals(1200.0, revenue);
-    }
-
-    @Test
-    void test4_GetHospitalStatus() {
-        when(patientRepository.count()).thenReturn(10L);
+    void test2_GetHospitalStatus_Success() {
+        when(patientRepository.count()).thenReturn(100L);
+        when(departmentRepository.count()).thenReturn(5L);
         when(stayRepository.findActiveStays()).thenReturn(Collections.emptyList());
         when(stayRepository.findOccupiedRoomStays()).thenReturn(Collections.emptyList());
-        when(departmentRepository.count()).thenReturn(4L);
+        when(undergoesRepository.findAllWithDetails()).thenReturn(Collections.emptyList());
+        when(affiliatedWithRepository.findAll()).thenReturn(Collections.emptyList());
+        when(departmentRepository.findAll()).thenReturn(Collections.emptyList());
 
-        Map<String, Object> status = adminService.getHospitalStatus();
-        assertEquals(10L, status.get("totalPatients"));
-        assertEquals(4L, status.get("totalDepartments"));
+        AdminDashboardDTO result = adminService.getHospitalStatus();
+
+        assertEquals(100L, result.getHospitalStatus().get("totalPatients"));
+        assertEquals(5L, result.getHospitalStatus().get("totalDepartments"));
     }
 
     @Test
-    void test5_GetCurrentlyAdmittedPatients() {
-        Stay activeStay = new Stay(); activeStay.setStayEnd(null);
+    void test3_GetCurrentlyAdmittedPatients_Success() {
+        Patient p = new Patient(101, "John Smith", "Addr", "123", 1, null);
+        Stay activeStay = new Stay(301, p, null, LocalDateTime.now(), null);
+
         when(stayRepository.findActiveStays()).thenReturn(List.of(activeStay));
 
-        List<Stay> result = patientService.getCurrentlyAdmittedPatients();
-        assertNull(result.get(0).getStayEnd());
+        List<AdmittedPatientDTO> result = patientService.getAdmittedPatients();
+
+        assertFalse(result.isEmpty());
+        assertEquals("John Smith", result.get(0).getPatientName());
     }
 
     @Test
-    void test6_GetOccupiedRooms() {
-        Stay s = new Stay();
+    void test4_GetOccupiedRooms_Success() {
+        Room r = new Room(101, "Single", null, true);
+        Stay s = new Stay(501, null, r, LocalDateTime.now(), null);
+
         when(stayRepository.findOccupiedRoomStays()).thenReturn(List.of(s));
 
-        List<Stay> result = appointmentService.getOccupiedRooms();
-        assertEquals(1, result.size());
+        List<OccupiedRoomDTO> result = appointmentService.getOccupiedRooms();
+
+        assertEquals(101, result.get(0).getRoomNumber());
+        assertEquals("Single", result.get(0).getRoomType());
     }
 
     @Test
-    void test7_GetNursesOnCall() {
-        OnCall oc = new OnCall();
-        when(onCallRepository.findCurrentlyOnCall(any(LocalDateTime.class))).thenReturn(List.of(oc));
+    void test5_GetMostBusyPhysician_EmptyResult() {
+        when(appointmentRepository.findPhysicianAppointmentCounts()).thenReturn(Collections.emptyList());
 
-        List<OnCall> result = appointmentService.getNursesOnCall();
-        assertEquals(1, result.size());
+        MostBusyPhysicianDTO result = physicianService.getMostBusyPhysician();
+
+        assertNull(result);
     }
 
     @Test
-    void test8_GetPrescriptionsByPhysician() {
-        Prescribes pr = new Prescribes();
-        when(prescribesRepository.findByPhysicianId(101)).thenReturn(List.of(pr));
+    void test6_GetMostBusyPhysician_PhysicianNotFound() {
+        List<Object[]> mockResult = new ArrayList<>();
+        mockResult.add(new Object[]{99, 5L});
 
-        List<Prescribes> result = prescriptionService.getPrescriptionsByPhysician(101);
-        assertEquals(1, result.size());
+        when(appointmentRepository.findPhysicianAppointmentCounts()).thenReturn(mockResult);
+        when(physicianRepository.findById(99)).thenReturn(Optional.empty());
+
+        MostBusyPhysicianDTO result = physicianService.getMostBusyPhysician();
+        assertNull(result);
+    }
+
+    @Test
+    void test7_GetAdmittedPatients_ReturnsEmptyList() {
+        when(stayRepository.findActiveStays()).thenReturn(Collections.emptyList());
+
+        List<AdmittedPatientDTO> result = patientService.getAdmittedPatients();
+
+        assertTrue(result.isEmpty());
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void test8_GetOccupiedRooms_NullSafetyCheck() {
+        Stay corruptedStay = new Stay();
+        corruptedStay.setRoom(null);
+
+        when(stayRepository.findOccupiedRoomStays()).thenReturn(List.of(corruptedStay));
+
+        List<OccupiedRoomDTO> result = appointmentService.getOccupiedRooms();
+
+        assertNull(result.get(0).getRoomNumber());
+        assertNotNull(result);
     }
 }

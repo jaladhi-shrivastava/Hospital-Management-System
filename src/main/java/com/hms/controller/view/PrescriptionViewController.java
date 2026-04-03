@@ -17,7 +17,7 @@ public class PrescriptionViewController {
 
     @GetMapping("/dashboard")
     public String dashboard() {
-        return "prescription/dashboard";  // → templates/prescription/dashboard.html
+        return "prescription/dashboard";
     }
 
     @GetMapping("/by-patient")
@@ -30,7 +30,7 @@ public class PrescriptionViewController {
                     prescriptionModuleService.getPrescriptionsByPatient(patientId));
             model.addAttribute("patientId", patientId);
         }
-        return "prescription/by-patient";  // → templates/prescription/by-patient.html
+        return "prescription/by-patient";
     }
 
     @GetMapping("/by-physician")
@@ -43,7 +43,7 @@ public class PrescriptionViewController {
                     prescriptionModuleService.getPrescriptionsByPhysician(physicianId));
             model.addAttribute("physicianId", physicianId);
         }
-        return "prescription/by-physician";  // → templates/prescription/by-physician.html
+        return "prescription/by-physician";
     }
 
     @GetMapping("/by-appointment")

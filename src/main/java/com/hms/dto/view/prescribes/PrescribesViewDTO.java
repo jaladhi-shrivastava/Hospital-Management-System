@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PrescribesViewDTO {
 
-    // From PrescribesId (EmbeddedId)
     private Integer physicianId;
     private Integer patientSsn;
     private Integer medicationCode;

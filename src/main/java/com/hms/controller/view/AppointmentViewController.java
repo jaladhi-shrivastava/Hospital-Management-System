@@ -20,7 +20,7 @@ public class AppointmentViewController {
                 appointmentModuleService.getOccupiedRooms());
         model.addAttribute("nursesOnCall",
                 appointmentModuleService.getNursesOnCall());
-        return "appointment/dashboard";  // → templates/appointment/dashboard.html
+        return "appointment/dashboard";
     }
 
 }

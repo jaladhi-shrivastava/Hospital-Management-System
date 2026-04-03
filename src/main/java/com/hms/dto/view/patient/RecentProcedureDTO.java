@@ -6,21 +6,16 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-// PatientViewController /patients/dashboard
-// model.addAttribute("recentProcedures", patientModuleService.getRecentProcedures());
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecentProcedureDTO {
 
-    // From UndergoesId (EmbeddedId)
     private Integer patientSsn;
     private Integer procedureCode;
     private Integer stayId;
     private LocalDateTime dateUndergoes;
-
-    // From Patient entity (LAZY via insertable=false)
     private String patientName;
 
     // From Procedures entity (LAZY via insertable=false)

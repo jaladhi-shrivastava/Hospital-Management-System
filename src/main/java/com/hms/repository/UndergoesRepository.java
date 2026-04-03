@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface UndergoesRepository extends JpaRepository<Undergoes, UndergoesId> {
 
-    // Fetches all associations eagerly to avoid LazyInitializationException
     @Query("SELECT u FROM Undergoes u " +
             "LEFT JOIN FETCH u.patient " +
             "LEFT JOIN FETCH u.procedures " +
@@ -22,7 +21,6 @@ public interface UndergoesRepository extends JpaRepository<Undergoes, UndergoesI
             "LEFT JOIN FETCH u.assistingNurse")
     List<Undergoes> findAllWithDetails();
 
-    // Used by AdminModule: procedures for a specific patient
     @Query("SELECT u FROM Undergoes u " +
             "LEFT JOIN FETCH u.patient " +
             "LEFT JOIN FETCH u.procedures " +
@@ -32,7 +30,6 @@ public interface UndergoesRepository extends JpaRepository<Undergoes, UndergoesI
             "WHERE u.id.patient = :patientSsn")
     List<Undergoes> findByPatientSsn(@Param("patientSsn") Integer patientSsn);
 
-    // Used by PatientModule: procedures in last 30 days
     @Query("SELECT u FROM Undergoes u " +
             "LEFT JOIN FETCH u.patient " +
             "LEFT JOIN FETCH u.procedures " +
