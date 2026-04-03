@@ -84,23 +84,23 @@ Client (Browser) → View Controller → Service → Repository → Database →
 - Stores personal details and medical history  
 - Tracks currently admitted patients in real-time  
 
-### 🩺 Doctor (Physician) Module
+###  Doctor (Physician) Module
 - Manages doctor profiles  
 - Handles specialization and departmental affiliations  
 - Identifies the **Most Busy Physician** using appointment aggregation  
 
-### 📅 Appointment & Room Module
+###  Appointment & Room Module
 - Core module connecting patients and doctors  
 - Manages scheduling and interactions  
 - Tracks occupied rooms and nurse-on-call schedules  
 - Provides paginated dashboard views  
 
-### 📊 Admin Module
+###  Admin Module
 - Provides aggregated hospital insights  
 - Tracks total patients and active departments  
 - Calculates revenue from completed procedures  
 
-### 💊 Prescription Module
+###  Prescription Module
 - Stores treatment details  
 - Links prescriptions to appointments  
 
