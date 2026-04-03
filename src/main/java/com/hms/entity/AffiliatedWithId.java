@@ -1,8 +1,9 @@
 package com.hms.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import lombok.*;
 import java.io.Serializable;
 
 @Embeddable
@@ -12,9 +13,9 @@ import java.io.Serializable;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class AffiliatedWithId implements Serializable {
 
-   @Column(name = "Physician")
-   private Integer physician;
+    @Column(name = "Physician")
+    private Integer physician;
 
-   @Column(name = "Department")
-   private Integer department;
+    @Column(name = "Department")
+    private Integer department;
 }

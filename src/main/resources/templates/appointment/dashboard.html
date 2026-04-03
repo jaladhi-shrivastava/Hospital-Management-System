@@ -6,45 +6,201 @@
   <title>HMS — Appointments Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
-      --y1:#F6E58D; --y2:#F8E9A1; --peach:#F9D6A0;
-      --c1:#F8A3A0; --c2:#F9AFAF;
-      --brown:#5C3D2E; --brown-m:#7A5244; --brown-l:#A07060;
-      --cream:#FFFDF5; --border:#F0C8A0;
+      --y1: #F6E58D; --y2: #F8E9A1; --peach: #F9D6A0;
+      --c1: #F8A3A0; --c2: #F9AFAF;
+      --brown: #5C3D2E; --brown-m: #7A5244; --brown-l: #A07060;
+      --cream: #FFFDF5; --border: #F0C8A0; --surface: #FFF8E8;
     }
-    body { font-family:'Nunito',sans-serif; background:var(--y1); color:var(--brown); min-height:100vh; }
-    nav { background:var(--cream); border-bottom:1.5px solid var(--border); padding:0 40px; display:flex; align-items:center; justify-content:space-between; height:62px; position:sticky; top:0; z-index:10; }
-    .nav-brand { font-family:'Playfair Display',serif; font-size:20px; color:var(--brown); display:flex; align-items:center; gap:10px; }
-    .nav-links { display:flex; gap:4px; }
-    .nav-links a { color:var(--brown-m); text-decoration:none; padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600; transition:background .15s; }
-    .nav-links a:hover { background:var(--y2); }
-    .nav-links a.active { background:var(--c1); color:var(--brown); }
-    main { max-width:1100px; margin:0 auto; padding:40px 24px; }
-    .page-title { font-family:'Playfair Display',serif; font-size:34px; color:var(--brown); }
-    .page-sub { font-size:14px; color:var(--brown-l); margin-top:4px; margin-bottom:28px; }
-    .api-badge { display:inline-flex; align-items:center; gap:8px; background:var(--peach); border:1.5px solid var(--border); border-radius:20px; padding:5px 14px; font-size:12px; font-weight:700; color:var(--brown-m); margin-bottom:32px; letter-spacing:.04em; }
-    .api-dot { width:8px; height:8px; background:var(--c1); border-radius:50%; }
-    .summary-row { display:flex; gap:16px; margin-bottom:36px; flex-wrap:wrap; }
-    .sum-card { background:var(--cream); border:1.5px solid var(--border); border-radius:14px; padding:22px 26px; flex:1; min-width:160px; }
-    .sum-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--brown-l); margin-bottom:6px; }
-    .sum-value { font-family:'Playfair Display',serif; font-size:36px; color:var(--brown); }
-    .two-col { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
-    .section-label { font-family:'Playfair Display',serif; font-size:20px; color:var(--brown); margin-bottom:14px; padding-bottom:10px; border-bottom:1.5px solid var(--border); }
-    .table-card { background:var(--cream); border:1.5px solid var(--border); border-radius:16px; overflow:hidden; }
-    table { width:100%; border-collapse:collapse; }
-    th { text-align:left; font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--brown-l); font-weight:700; padding:12px 16px; background:var(--y2); border-bottom:1.5px solid var(--border); }
-    td { padding:13px 16px; font-size:13px; color:var(--brown); border-bottom:1px solid var(--border); }
-    tr:last-child td { border-bottom:none; }
-    tr:hover td { background:var(--y2); }
-    .badge-occupied { display:inline-block; background:var(--c1); color:var(--brown); border:1px solid var(--c2); border-radius:20px; padding:3px 11px; font-size:11px; font-weight:700; }
-    .badge-onduty { display:inline-block; background:var(--peach); color:var(--brown-m); border:1px solid var(--border); border-radius:20px; padding:3px 11px; font-size:11px; font-weight:700; }
-    .empty { text-align:center; color:var(--brown-l); padding:32px; font-size:13px; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: var(--brown);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #FFF8EC;
+      background-image:
+              url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect x='37' y='26' width='6' height='28' rx='2' fill='%23E8A870' opacity='0.22'/%3E%3Crect x='26' y='37' width='28' height='6' rx='2' fill='%23E8A870' opacity='0.22'/%3E%3C/svg%3E"),
+              linear-gradient(145deg, #FFFDF5 0%, #FFF8E2 38%, #FFF1CE 70%, #FDE8C2 100%);
+    }
+
+    #orb-layer { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .orb { position: absolute; border-radius: 50%; will-change: transform; }
+    .orb-1 {
+      width: 580px; height: 580px; top: -180px; left: -160px;
+      background: radial-gradient(circle at 38% 38%, rgba(246,229,141,0.55) 0%, rgba(248,233,161,0.30) 40%, transparent 68%);
+    }
+    .orb-2 {
+      width: 440px; height: 440px; top: -100px; right: -120px;
+      background: radial-gradient(circle at 62% 32%, rgba(249,214,160,0.48) 0%, rgba(249,214,160,0.22) 45%, transparent 70%);
+    }
+    .orb-3 {
+      width: 480px; height: 480px; bottom: -150px; right: -130px;
+      background: radial-gradient(circle at 58% 62%, rgba(248,163,160,0.26) 0%, rgba(249,175,175,0.12) 48%, transparent 70%);
+    }
+    .orb-4 {
+      width: 360px; height: 360px; bottom: -90px; left: -80px;
+      background: radial-gradient(circle at 32% 68%, rgba(246,229,141,0.38) 0%, transparent 62%);
+    }
+    .orb-5 {
+      width: 280px; height: 280px; top: 35%; left: 55%;
+      background: radial-gradient(circle, rgba(249,214,160,0.20) 0%, transparent 65%);
+    }
+
+    nav {
+      background: rgba(255, 253, 245, 0.84); border-bottom: 1.5px solid rgba(240,200,160,0.55);
+      padding: 0 40px; display: flex; align-items: center; justify-content: space-between;
+      height: 62px; position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(22px) saturate(1.7); -webkit-backdrop-filter: blur(22px) saturate(1.7);
+      box-shadow: 0 2px 28px rgba(92,61,46,0.09);
+    }
+    .nav-brand { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--brown); display: flex; align-items: center; gap: 10px; }
+    .nav-links { display: flex; gap: 4px; }
+    .nav-links a {
+      color: var(--brown-m); text-decoration: none; padding: 7px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; transition: background .18s, color .18s, box-shadow .18s;
+    }
+    .nav-links a:hover { background: rgba(248,233,161,0.55); color: var(--brown); box-shadow: 0 2px 10px rgba(92,61,46,0.10); }
+    .nav-links a.active { background: var(--c1); color: var(--brown); box-shadow: 0 3px 12px rgba(248,163,160,0.38); }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 44px 24px; position: relative; z-index: 1; }
+
+    .page-header { margin-bottom: 38px; }
+    .page-title { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--brown); letter-spacing: -.01em; }
+    .page-sub { font-size: 14px; color: var(--brown-l); margin-top: 5px; }
+    .api-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(249,214,160,0.42); border: 1.5px solid rgba(240,200,160,0.65);
+      border-radius: 20px; padding: 5px 14px; font-size: 12px; font-weight: 700;
+      color: var(--brown-m); margin-top: 14px; letter-spacing: .04em;
+    }
+    .api-dot {
+      width: 8px; height: 8px; background: var(--c1); border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(248,163,160,0.25); animation: pulse-dot 2.2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow: 0 0 0 3px rgba(248,163,160,0.25); }
+      50%      { box-shadow: 0 0 0 7px rgba(248,163,160,0.08); }
+    }
+
+    .summary-row { display: flex; gap: 18px; margin-bottom: 38px; flex-wrap: wrap; }
+    .sum-card {
+      background: rgba(255, 253, 244, 0.78);
+      border: 1.5px solid rgba(255, 255, 255, 0.88);
+      border-radius: 18px; padding: 24px 28px; flex: 1; min-width: 180px;
+      backdrop-filter: blur(20px) saturate(1.6) brightness(1.04);
+      -webkit-backdrop-filter: blur(20px) saturate(1.6) brightness(1.04);
+      box-shadow: 0 6px 24px rgba(92,61,46,0.11), 0 2px 6px rgba(92,61,46,0.06), inset 0 1.5px 0 rgba(255,255,255,0.95);
+      transform-style: preserve-3d;
+      transition: transform 0.32s cubic-bezier(.22,.68,0,1.1), box-shadow 0.32s ease;
+      animation: floatIn .55s cubic-bezier(.22,.68,0,1.1) both;
+    }
+    .sum-card:nth-child(1) { border-left: 4px solid var(--c1); }
+    .sum-card:nth-child(2) { border-left: 4px solid var(--peach); animation-delay: .10s; }
+    .sum-card:hover {
+      box-shadow: 0 18px 48px rgba(92,61,46,0.15), 0 6px 14px rgba(92,61,46,0.09), inset 0 1.5px 0 rgba(255,255,255,1);
+    }
+    .sum-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--brown-l); margin-bottom: 8px; }
+    .sum-value { font-family: 'Playfair Display', serif; font-size: 38px; color: var(--brown); line-height: 1; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    @media(max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+
+    .section-label {
+      font-family: 'Playfair Display', serif; font-size: 20px; color: var(--brown);
+      margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1.5px solid rgba(240,200,160,0.50);
+    }
+
+    .stat-card, .table-card {
+      background: rgba(255, 253, 244, 0.78);
+      border: 1.5px solid rgba(255, 255, 255, 0.88);
+      border-radius: 18px;
+      backdrop-filter: blur(20px) saturate(1.6) brightness(1.04);
+      -webkit-backdrop-filter: blur(20px) saturate(1.6) brightness(1.04);
+      box-shadow: 0 6px 24px rgba(92,61,46,0.11), 0 2px 6px rgba(92,61,46,0.06), inset 0 1.5px 0 rgba(255,255,255,0.95);
+      transform-style: preserve-3d;
+      transition: transform 0.32s cubic-bezier(.22,.68,0,1.1), box-shadow 0.32s ease;
+    }
+    .stat-card:hover, .table-card:hover {
+      box-shadow: 0 18px 48px rgba(92,61,46,0.15), 0 6px 14px rgba(92,61,46,0.09), inset 0 1.5px 0 rgba(255,255,255,1);
+    }
+
+    .table-card { overflow: hidden; animation: floatIn .55s cubic-bezier(.22,.68,0,1.1) .18s both; }
+    .two-col > div:nth-child(2) .table-card { animation-delay: .28s; }
+
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left; font-size: 11px; letter-spacing: .07em; text-transform: uppercase;
+      color: var(--brown-l); font-weight: 700; padding: 13px 16px;
+      background: rgba(248,233,161,0.42); border-bottom: 1.5px solid rgba(240,200,160,0.42);
+    }
+    td { padding: 13px 16px; font-size: 13px; color: var(--brown); border-bottom: 1px solid rgba(240,200,160,0.26); }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(248,233,161,0.26); transition: background .14s; }
+
+    .badge-occupied {
+      display: inline-block; background: rgba(248,163,160,0.38); color: var(--brown-m);
+      border: 1px solid rgba(248,163,160,0.55); border-radius: 20px;
+      padding: 3px 11px; font-size: 11px; font-weight: 700;
+    }
+    .badge-onduty {
+      display: inline-block; background: rgba(249,214,160,0.55); color: var(--brown-m);
+      border: 1px solid rgba(240,200,160,0.68); border-radius: 20px;
+      padding: 3px 11px; font-size: 11px; font-weight: 700;
+    }
+    .empty { text-align: center; color: var(--brown-l); padding: 32px; font-size: 13px; }
+
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin: 18px 0 14px;
+      flex-wrap: wrap;
+    }
+
+    .pagination span {
+      display: flex;
+      gap: 10px;
+    }
+
+    .pagination a {
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--brown-m);
+      border: 1px solid rgba(240,200,160,0.6);
+      background: rgba(255,255,255,0.6);
+    }
+
+    .pagination a.active {
+      background: var(--c1);
+      color: var(--brown);
+    }
   </style>
 </head>
+
 <body>
+
+<div id="orb-layer">
+  <div class="orb orb-1" data-speed="0.038"></div>
+  <div class="orb orb-2" data-speed="-0.028"></div>
+  <div class="orb orb-3" data-speed="0.048"></div>
+  <div class="orb orb-4" data-speed="-0.032"></div>
+  <div class="orb orb-5" data-speed="0.022"></div>
+</div>
+
 <nav>
-  <div class="nav-brand">🏥 MedCore HMS</div>
+  <div class="nav-brand"><span>🏥</span> MedCore HMS</div>
   <div class="nav-links">
     <a th:href="@{/admin/dashboard}">Admin</a>
     <a th:href="@{/patients/dashboard}">Patients</a>
@@ -52,19 +208,22 @@
     <a th:href="@{/appointments/dashboard}" class="active">Appointments</a>
   </div>
 </nav>
+
 <main>
-  <div class="page-title">Appointments &amp; Ward Status</div>
-  <div class="page-sub">Live view of occupied rooms and nurses currently on call</div>
-  <div class="api-badge"><div class="api-dot"></div>Implementing: GET /api/rooms/occupied </div>
+  <div class="page-header">
+    <div class="page-title">Appointments &amp; Ward Status</div>
+    <div class="page-sub">Live view of occupied rooms and nurses currently on call</div>
+    <div class="api-badge"><div class="api-dot"></div>Implementing: GET /api/rooms/occupied</div>
+  </div>
 
   <div class="summary-row">
     <div class="sum-card">
       <div class="sum-label">Occupied Rooms</div>
-      <div class="sum-value" th:text="${occupiedRooms.size()}">0</div>
+      <div class="sum-value" th:text="${totalOccupiedRooms}">0</div>
     </div>
     <div class="sum-card">
       <div class="sum-label">Nurses On Call</div>
-      <div class="sum-value" th:text="${nursesOnCall.size()}">0</div>
+      <div class="sum-value" th:text="${totalNursesOnCall}">0</div>
     </div>
   </div>
 
@@ -77,7 +236,6 @@
           <tr><th>Room</th><th>Patient</th><th>Since</th><th>Status</th></tr>
           </thead>
           <tbody>
-
           <tr th:each="room : ${occupiedRooms}">
             <td th:text="${room.roomNumber != null ? 'Room ' + room.roomNumber : '—'}"></td>
             <td th:text="${room.patientName != null ? room.patientName : 'N/A'}"></td>
@@ -89,6 +247,26 @@
           </tr>
           </tbody>
         </table>
+
+
+        <div class="pagination">
+          <a th:if="${roomCurrentPage > 0}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage - 1}, nursePage=${nurseCurrentPage}, size=${size})}">
+            Prev
+          </a>
+
+          <span th:each="i : ${#numbers.sequence(0, roomTotalPages - 1)}">
+    <a th:href="@{/appointments/dashboard(roomPage=${i}, nursePage=${nurseCurrentPage}, size=${size})}"
+       th:text="${i + 1}"
+       th:classappend="${i == roomCurrentPage} ? ' active' : ''">
+    </a>
+  </span>
+
+          <a th:if="${roomCurrentPage < roomTotalPages - 1}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage + 1}, nursePage=${nurseCurrentPage}, size=${size})}">
+            Next
+          </a>
+        </div>
       </div>
     </div>
 
@@ -100,7 +278,6 @@
           <tr><th>Nurse</th><th>Block</th><th>Shift Start</th><th>Status</th></tr>
           </thead>
           <tbody>
-
           <tr th:each="nurse : ${nursesOnCall}">
             <td th:text="${nurse.nurseName != null ? nurse.nurseName : 'N/A'}"></td>
             <td th:text="${'F' + nurse.blockFloor + ' · B' + nurse.blockCode}"></td>
@@ -112,9 +289,75 @@
           </tr>
           </tbody>
         </table>
+
+        <div class="pagination">
+          <a th:if="${nurseCurrentPage > 0}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${nurseCurrentPage - 1}, size=${size})}">
+            Prev
+          </a>
+
+          <span th:each="i : ${#numbers.sequence(0, nurseTotalPages - 1)}">
+    <a th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${i}, size=${size})}"
+       th:text="${i + 1}"
+       th:classappend="${i == nurseCurrentPage} ? ' active' : ''">
+    </a>
+  </span>
+
+          <a th:if="${nurseCurrentPage < nurseTotalPages - 1}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${nurseCurrentPage + 1}, size=${size})}">
+            Next
+          </a>
+        </div>
       </div>
     </div>
   </div>
 </main>
+
+<script>
+  (function () {
+    'use strict';
+    var orbs  = Array.from(document.querySelectorAll('.orb'));
+    var cards = Array.from(document.querySelectorAll('.sum-card, .table-card'));
+    var rawX = 0, rawY = 0, curX = 0, curY = 0;
+
+    document.addEventListener('mousemove', function (e) {
+      rawX = (e.clientX / window.innerWidth  - 0.5) * 2;
+      rawY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }, { passive: true });
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    (function orbLoop() {
+      curX = lerp(curX, rawX, 0.06);
+      curY = lerp(curY, rawY, 0.06);
+      orbs.forEach(function (orb) {
+        var spd = parseFloat(orb.dataset.speed) || 0.03;
+        orb.style.transform = 'translate3d(' + (curX * window.innerWidth * spd) + 'px,' + (curY * window.innerHeight * spd) + 'px,0)';
+      });
+      requestAnimationFrame(orbLoop);
+    })();
+
+    cards.forEach(function (card) {
+      var isTable = card.classList.contains('table-card');
+      var maxTilt = isTable ? 5 : 11;
+      var lifting = false;
+      card.addEventListener('mouseenter', function () { lifting = true; });
+      card.addEventListener('mousemove', function (e) {
+        if (!lifting) return;
+        var r = card.getBoundingClientRect();
+        var cx = (e.clientX - r.left) / r.width  - 0.5;
+        var cy = (e.clientY - r.top)  / r.height - 0.5;
+        card.style.transform  = 'translateY(-8px) rotateX(' + (-cy * maxTilt) + 'deg) rotateY(' + (cx * maxTilt) + 'deg) scale(1.02)';
+        card.style.transition = 'transform 0.10s ease, box-shadow 0.28s ease';
+      });
+      card.addEventListener('mouseleave', function () {
+        lifting = false;
+        card.style.transform  = '';
+        card.style.transition = 'transform 0.45s cubic-bezier(.22,.68,0,1.1), box-shadow 0.32s ease';
+      });
+    });
+  })();
+</script>
+
 </body>
 </html>
