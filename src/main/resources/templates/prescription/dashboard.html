@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>HMS — Prescriptions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --y1: #F6E58D; --y2: #F8E9A1; --peach: #F9D6A0;
+            --c1: #F8A3A0; --c2: #F9AFAF;
+            --brown: #5C3D2E; --brown-m: #7A5244; --brown-l: #A07060;
+            --cream: #FFFDF5; --border: #F0C8A0;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            color: var(--brown);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-color: #FFF8EC;
+            background-image:
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect x='37' y='26' width='6' height='28' rx='2' fill='%23E8A870' opacity='0.22'/%3E%3Crect x='26' y='37' width='28' height='6' rx='2' fill='%23E8A870' opacity='0.22'/%3E%3C/svg%3E"),
+                    linear-gradient(145deg, #FFFDF5 0%, #FFF8E2 38%, #FFF1CE 70%, #FDE8C2 100%);
+        }
+        #orb-layer { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+        .orb { position:absolute; border-radius:50%; will-change:transform; }
+        .orb-1 { width:580px; height:580px; top:-180px; left:-160px; background:radial-gradient(circle at 38% 38%,rgba(246,229,141,0.55) 0%,rgba(248,233,161,0.30) 40%,transparent 68%); }
+        .orb-2 { width:440px; height:440px; top:-100px; right:-120px; background:radial-gradient(circle at 62% 32%,rgba(249,214,160,0.48) 0%,rgba(249,214,160,0.22) 45%,transparent 70%); }
+        .orb-3 { width:480px; height:480px; bottom:-150px; right:-130px; background:radial-gradient(circle at 58% 62%,rgba(248,163,160,0.26) 0%,rgba(249,175,175,0.12) 48%,transparent 70%); }
+        nav {
+            background: rgba(255,253,245,0.84);
+            border-bottom: 1.5px solid rgba(240,200,160,0.55);
+            padding: 0 40px;
+            display: flex; align-items: center; justify-content: space-between;
+            height: 62px; position: sticky; top: 0; z-index: 20;
+            backdrop-filter: blur(22px) saturate(1.7);
+            box-shadow: 0 2px 28px rgba(92,61,46,0.09);
+        }
+        .nav-brand { font-family:'Playfair Display',serif; font-size:20px; color:var(--brown); display:flex; align-items:center; gap:10px; }
+        .nav-links { display:flex; gap:4px; }
+        .nav-links a { color:var(--brown-m); text-decoration:none; padding:7px 16px; border-radius:20px; font-size:13px; font-weight:600; transition:background .18s,color .18s; }
+        .nav-links a:hover { background:rgba(248,233,161,0.55); color:var(--brown); }
+        .nav-links a.active { background:var(--c1); color:var(--brown); box-shadow:0 3px 12px rgba(248,163,160,0.38); }
+        main { max-width:1100px; margin:0 auto; padding:44px 24px; position:relative; z-index:1; }
+        .page-header { margin-bottom:32px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:36px; color:var(--brown); }
+        .page-sub { font-size:14px; color:var(--brown-l); margin-top:5px; }
+        .api-badge {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(249,214,160,0.42); border:1.5px solid rgba(240,200,160,0.65);
+            border-radius:20px; padding:5px 14px; font-size:12px; font-weight:700;
+            color:var(--brown-m); margin-top:14px; letter-spacing:.04em;
+        }
+        .api-dot { width:8px; height:8px; background:var(--c1); border-radius:50%; box-shadow:0 0 0 3px rgba(248,163,160,0.25); animation:pulse-dot 2.2s ease-in-out infinite; }
+        @keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 3px rgba(248,163,160,0.25);} 50%{box-shadow:0 0 0 7px rgba(248,163,160,0.08);} }
+
+        /* Search bar */
+        .search-row {
+            display: flex; gap: 12px; flex-wrap: wrap;
+            margin-bottom: 32px; align-items: flex-end;
+        }
+        .search-group { display:flex; flex-direction:column; gap:6px; flex:1; min-width:180px; }
+        .search-group label { font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--brown-l); }
+        .search-group input {
+            background:rgba(255,253,244,0.85); border:1.5px solid rgba(240,200,160,0.7);
+            border-radius:10px; padding:10px 14px; color:var(--brown);
+            font-family:'Nunito',sans-serif; font-size:14px; outline:none;
+            backdrop-filter:blur(10px);
+        }
+        .search-group input:focus { border-color:var(--c1); }
+        .search-btn {
+            background:var(--c1); color:var(--brown); border:none; border-radius:10px;
+            padding:11px 22px; font-family:'Nunito',sans-serif; font-size:14px;
+            font-weight:700; cursor:pointer; transition:background .2s; white-space:nowrap;
+            align-self:flex-end;
+        }
+        .search-btn:hover { background:var(--c2); }
+        .search-result-info {
+            font-size:13px; color:var(--brown-l); margin-bottom:14px;
+            display:flex; align-items:center; gap:8px;
+        }
+        .search-result-info a { color:var(--brown-m); font-weight:700; text-decoration:none; font-size:12px; }
+
+        /* Table */
+        .section-label { font-family:'Playfair Display',serif; font-size:22px; color:var(--brown); margin-bottom:16px; padding-bottom:10px; border-bottom:1.5px solid rgba(240,200,160,0.50); }
+        .table-card {
+            background:rgba(255,253,244,0.78); border:1.5px solid rgba(255,255,255,0.88);
+            border-radius:18px; overflow:hidden; margin-bottom:36px;
+            backdrop-filter:blur(20px) saturate(1.6); box-shadow:0 6px 24px rgba(92,61,46,0.11),inset 0 1.5px 0 rgba(255,255,255,0.95);
+            animation:floatIn .55s cubic-bezier(.22,.68,0,1.1) .12s both;
+        }
+        table { width:100%; border-collapse:collapse; }
+        th { text-align:left; font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--brown-l); font-weight:700; padding:14px 20px; background:rgba(248,233,161,0.42); border-bottom:1.5px solid rgba(240,200,160,0.42); }
+        td { padding:14px 20px; font-size:14px; color:var(--brown); border-bottom:1px solid rgba(240,200,160,0.26); }
+        tr:last-child td { border-bottom:none; }
+        tr:hover td { background:rgba(248,233,161,0.26); }
+        .badge-med { display:inline-block; background:rgba(249,175,175,0.45); color:var(--brown-m); border:1px solid rgba(248,163,160,0.55); border-radius:20px; padding:3px 12px; font-size:12px; font-weight:700; }
+        .badge-dose { display:inline-block; background:rgba(249,214,160,0.55); color:var(--brown-m); border:1px solid rgba(240,200,160,0.65); border-radius:20px; padding:3px 12px; font-size:12px; font-weight:700; }
+        .empty { text-align:center; color:var(--brown-l); padding:48px; font-size:14px; }
+
+        /* stat summary */
+        .stat-row { display:flex; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+        .stat-pill {
+            background:rgba(255,253,244,0.78); border:1.5px solid rgba(255,255,255,0.88);
+            border-radius:14px; padding:18px 24px; flex:1; min-width:140px;
+            backdrop-filter:blur(16px); box-shadow:0 4px 16px rgba(92,61,46,0.09);
+        }
+        .stat-pill-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--brown-l); margin-bottom:6px; }
+        .stat-pill-value { font-family:'Playfair Display',serif; font-size:32px; color:var(--brown); }
+
+        @keyframes floatIn { from{opacity:0;transform:translateY(24px) scale(.97);} to{opacity:1;transform:none;} }
+    </style>
+</head>
+<body>
+
+<div id="orb-layer">
+    <div class="orb orb-1" data-speed="0.038"></div>
+    <div class="orb orb-2" data-speed="-0.028"></div>
+    <div class="orb orb-3" data-speed="0.048"></div>
+</div>
+
+<nav>
+    <div class="nav-brand"><span>💊</span> MedCore HMS</div>
+    <div class="nav-links">
+        <a th:href="@{/admin/dashboard}">Admin</a>
+        <a th:href="@{/patients/dashboard}">Patients</a>
+        <a th:href="@{/physicians/dashboard}">Physicians</a>
+        <a th:href="@{/appointments/dashboard}">Appointments</a>
+        <a th:href="@{/prescriptions/dashboard}" class="active">Prescriptions</a>
+    </div>
+</nav>
+
+<main>
+    <div class="page-header">
+        <div class="page-title">Prescriptions</div>
+        <div class="page-sub">View and search all prescription records across patients and physicians</div>
+        <div class="api-badge"><div class="api-dot"></div>Implementing: GET /api/prescriptions</div>
+    </div>
+
+    <!-- Search forms -->
+    <div class="search-row">
+        <form th:action="@{/prescriptions/by-patient}" method="get" style="display:contents;">
+            <div class="search-group">
+                <label>Search by Patient SSN</label>
+                <input type="number" name="patientId" placeholder="e.g. 100000001"/>
+            </div>
+            <button class="search-btn" type="submit">Search Patient</button>
+        </form>
+        <form th:action="@{/prescriptions/by-physician}" method="get" style="display:contents;">
+            <div class="search-group">
+                <label>Search by Physician ID</label>
+                <input type="number" name="physicianId" placeholder="e.g. 1"/>
+            </div>
+            <button class="search-btn" type="submit">Search Physician</button>
+        </form>
+        <form th:action="@{/prescriptions/by-appointment}" method="get" style="display:contents;">
+            <div class="search-group">
+                <label>Search by Appointment ID</label>
+                <input type="number" name="appointmentId" placeholder="e.g. 13216584"/>
+            </div>
+            <button class="search-btn" type="submit">Search Appointment</button>
+        </form>
+    </div>
+
+    <!-- Search result info banner -->
+    <div class="search-result-info" th:if="${searchId != null}">
+        Showing results for <strong th:text="${searchType + ': ' + searchId}"></strong>
+        &nbsp;·&nbsp;
+        <a th:href="@{/prescriptions/dashboard}">← View All</a>
+    </div>
+
+    <!-- Summary count -->
+    <div class="stat-row" th:if="${prescriptions != null}">
+        <div class="stat-pill">
+            <div class="stat-pill-label">Total Records</div>
+            <div class="stat-pill-value" th:text="${prescriptions.size()}">0</div>
+        </div>
+    </div>
+
+    <!-- Prescriptions table -->
+    <div class="section-label">Prescription Records</div>
+    <div class="table-card">
+        <table>
+            <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Physician</th>
+                <th>Medication</th>
+                <th>Brand</th>
+                <th>Dose</th>
+                <th>Date</th>
+                <th>Appointment</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--
+              prescriptions is List<PrescriptionDTO>
+              Fields: physicianId, physicianName, physicianPosition,
+                      patientSsn, patientName,
+                      medicationCode, medicationName, medicationBrand,
+                      prescriptionDate, dose, appointmentId
+            -->
+            <tr th:each="rx : ${prescriptions}">
+                <td th:text="${rx.patientName != null ? rx.patientName : 'N/A'}"></td>
+                <td th:text="${rx.physicianName != null ? rx.physicianName : 'N/A'}"></td>
+                <td><span class="badge-med" th:text="${rx.medicationName != null ? rx.medicationName : '—'}"></span></td>
+                <td th:text="${rx.medicationBrand != null ? rx.medicationBrand : '—'}"></td>
+                <td><span class="badge-dose" th:text="${rx.dose != null ? rx.dose : '—'}"></span></td>
+                <td th:text="${rx.prescriptionDate}"></td>
+                <td th:text="${rx.appointmentId != null ? '#' + rx.appointmentId : 'Walk-in'}"></td>
+            </tr>
+            <tr th:if="${prescriptions == null or prescriptions.isEmpty()}">
+                <td colspan="7" class="empty">No prescription records found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+    (function () {
+        var orbs = Array.from(document.querySelectorAll('.orb'));
+        var rawX = 0, rawY = 0, curX = 0, curY = 0;
+        document.addEventListener('mousemove', function (e) {
+            rawX = (e.clientX / window.innerWidth  - 0.5) * 2;
+            rawY = (e.clientY / window.innerHeight - 0.5) * 2;
+        }, { passive: true });
+        function lerp(a, b, t) { return a + (b - a) * t; }
+        (function loop() {
+            curX = lerp(curX, rawX, 0.06);
+            curY = lerp(curY, rawY, 0.06);
+            orbs.forEach(function (orb) {
+                var spd = parseFloat(orb.dataset.speed) || 0.03;
+                orb.style.transform = 'translate3d(' + (curX * window.innerWidth * spd) + 'px,' + (curY * window.innerHeight * spd) + 'px,0)';
+            });
+            requestAnimationFrame(loop);
+        })();
+    })();
+</script>
+</body>
+</html>
