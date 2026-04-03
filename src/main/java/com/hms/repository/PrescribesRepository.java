@@ -12,12 +12,34 @@ import java.util.List;
 @Repository
 public interface PrescribesRepository extends JpaRepository<Prescribes, PrescribesId> {
 
-    @Query("SELECT p FROM Prescribes p WHERE p.id.patient = :patientSsn")
+    @Query("SELECT p FROM Prescribes p " +
+            "LEFT JOIN FETCH p.physician " +
+            "LEFT JOIN FETCH p.patient " +
+            "LEFT JOIN FETCH p.medication " +
+            "LEFT JOIN FETCH p.appointment")
+    List<Prescribes> findAllWithDetails();
+
+    @Query("SELECT p FROM Prescribes p " +
+            "LEFT JOIN FETCH p.physician " +
+            "LEFT JOIN FETCH p.patient " +
+            "LEFT JOIN FETCH p.medication " +
+            "LEFT JOIN FETCH p.appointment " +
+            "WHERE p.id.patient = :patientSsn")
     List<Prescribes> findByPatientSsn(@Param("patientSsn") Integer patientSsn);
 
-    @Query("SELECT p FROM Prescribes p WHERE p.id.physician = :physicianId")
+    @Query("SELECT p FROM Prescribes p " +
+            "LEFT JOIN FETCH p.physician " +
+            "LEFT JOIN FETCH p.patient " +
+            "LEFT JOIN FETCH p.medication " +
+            "LEFT JOIN FETCH p.appointment " +
+            "WHERE p.id.physician = :physicianId")
     List<Prescribes> findByPhysicianId(@Param("physicianId") Integer physicianId);
 
-    @Query("SELECT p FROM Prescribes p WHERE p.appointment.appointmentId = :appointmentId")
+    @Query("SELECT p FROM Prescribes p " +
+            "LEFT JOIN FETCH p.physician " +
+            "LEFT JOIN FETCH p.patient " +
+            "LEFT JOIN FETCH p.medication " +
+            "LEFT JOIN FETCH p.appointment " +
+            "WHERE p.appointment.appointmentId = :appointmentId")
     List<Prescribes> findByAppointmentId(@Param("appointmentId") Integer appointmentId);
 }

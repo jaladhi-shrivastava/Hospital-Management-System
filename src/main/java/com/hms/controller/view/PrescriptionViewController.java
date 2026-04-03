@@ -16,46 +16,45 @@ public class PrescriptionViewController {
     private PrescriptionModuleService prescriptionModuleService;
 
     @GetMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(Model model) {
+        model.addAttribute("prescriptions",
+                prescriptionModuleService.getAllPrescriptions());
         return "prescription/dashboard";
     }
 
     @GetMapping("/by-patient")
-    public String byPatient(
-            @RequestParam(required = false) Integer patientId,
-            Model model) {
-
+    public String byPatient(@RequestParam(required = false) Integer patientId,
+                            Model model) {
         if (patientId != null) {
             model.addAttribute("prescriptions",
                     prescriptionModuleService.getPrescriptionsByPatient(patientId));
-            model.addAttribute("patientId", patientId);
+            model.addAttribute("searchId", patientId);
+            model.addAttribute("searchType", "Patient SSN");
         }
-        return "prescription/by-patient";
+        return "prescription/dashboard";
     }
 
     @GetMapping("/by-physician")
-    public String byPhysician(
-            @RequestParam(required = false) Integer physicianId,
-            Model model) {
-
+    public String byPhysician(@RequestParam(required = false) Integer physicianId,
+                              Model model) {
         if (physicianId != null) {
             model.addAttribute("prescriptions",
                     prescriptionModuleService.getPrescriptionsByPhysician(physicianId));
-            model.addAttribute("physicianId", physicianId);
+            model.addAttribute("searchId", physicianId);
+            model.addAttribute("searchType", "Physician ID");
         }
-        return "prescription/by-physician";
+        return "prescription/dashboard";
     }
 
     @GetMapping("/by-appointment")
-    public String byAppointment(
-            @RequestParam(required = false) Integer appointmentId,
-            Model model) {
-
+    public String byAppointment(@RequestParam(required = false) Integer appointmentId,
+                                Model model) {
         if (appointmentId != null) {
             model.addAttribute("prescriptions",
                     prescriptionModuleService.getPrescriptionsByAppointment(appointmentId));
-            model.addAttribute("appointmentId", appointmentId);
+            model.addAttribute("searchId", appointmentId);
+            model.addAttribute("searchType", "Appointment ID");
         }
-        return "prescription/by-appointment";
+        return "prescription/dashboard";
     }
 }

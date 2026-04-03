@@ -206,6 +206,7 @@
     <a th:href="@{/patients/dashboard}">Patients</a>
     <a th:href="@{/physicians/dashboard}">Physicians</a>
     <a th:href="@{/appointments/dashboard}" class="active">Appointments</a>
+    <a th:href="@{/prescription/dashboard}">Prescriptions</a>
   </div>
 </nav>
 
@@ -251,19 +252,19 @@
 
         <div class="pagination">
           <a th:if="${roomCurrentPage > 0}"
-             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage - 1}, nursePage=${nurseCurrentPage}, size=${size})}">
+             th:href="@{/appointments/dashboard(roomPage=${(roomCurrentPage ?: 0) - 1}, nursePage=${nurseCurrentPage}, size=${size})}">
             Prev
           </a>
 
-          <span th:each="i : ${#numbers.sequence(0, roomTotalPages - 1)}">
+          <span th:each="i : ${#numbers.sequence(0, (roomTotalPages ?: 1) - 1)}">
     <a th:href="@{/appointments/dashboard(roomPage=${i}, nursePage=${nurseCurrentPage}, size=${size})}"
        th:text="${i + 1}"
        th:classappend="${i == roomCurrentPage} ? ' active' : ''">
     </a>
   </span>
 
-          <a th:if="${roomCurrentPage < roomTotalPages - 1}"
-             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage + 1}, nursePage=${nurseCurrentPage}, size=${size})}">
+          <a th:if="${roomCurrentPage < (roomTotalPages ?: 1) - 1}"
+             th:href="@{/appointments/dashboard(roomPage=${(roomCurrentPage ?: 0) + 1}, nursePage=${nurseCurrentPage}, size=${size})}">
             Next
           </a>
         </div>
@@ -292,19 +293,19 @@
 
         <div class="pagination">
           <a th:if="${nurseCurrentPage > 0}"
-             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${nurseCurrentPage - 1}, size=${size})}">
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${(nurseCurrentPage?: 0) - 1}, size=${size})}">
             Prev
           </a>
 
-          <span th:each="i : ${#numbers.sequence(0, nurseTotalPages - 1)}">
+          <span th:each="i : ${#numbers.sequence(0, (nurseTotalPages ?: 1) - 1)}">
     <a th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${i}, size=${size})}"
        th:text="${i + 1}"
        th:classappend="${i == nurseCurrentPage} ? ' active' : ''">
     </a>
   </span>
 
-          <a th:if="${nurseCurrentPage < nurseTotalPages - 1}"
-             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${nurseCurrentPage + 1}, size=${size})}">
+          <a th:if="${nurseCurrentPage < (nurseTotalPages ?: 1) - 1}"
+             th:href="@{/appointments/dashboard(roomPage=${roomCurrentPage}, nursePage=${(nurseCurrentPage ?: 0) + 1}, size=${size})}">
             Next
           </a>
         </div>

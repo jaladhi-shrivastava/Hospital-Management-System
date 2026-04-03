@@ -21,7 +21,6 @@ public class OccupiedRoomDTO {
     private LocalDateTime stayStart;
     private LocalDateTime stayEnd;
 
-    // From Patient entity (via Stay — @JsonIgnore LAZY)
     private Integer patientSsn;
     private String patientName;
 }

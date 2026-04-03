@@ -1,14 +1,16 @@
 package com.hms.service.module.prescription;
 
-import com.hms.entity.Prescribes;
+import com.hms.dto.view.prescription.PrescriptionDTO;
 
 import java.util.List;
 
 public interface PrescriptionModuleService {
 
-    List<Prescribes> getPrescriptionsByPatient(Integer patientSsn);
+    List<PrescriptionDTO> getAllPrescriptions();
 
-    List<Prescribes> getPrescriptionsByPhysician(Integer physicianId);
+    List<PrescriptionDTO> getPrescriptionsByPatient(Integer patientSsn);
 
-    List<Prescribes> getPrescriptionsByAppointment(Integer appointmentId);
+    List<PrescriptionDTO> getPrescriptionsByPhysician(Integer physicianId);
+
+    List<PrescriptionDTO> getPrescriptionsByAppointment(Integer appointmentId);
 }
