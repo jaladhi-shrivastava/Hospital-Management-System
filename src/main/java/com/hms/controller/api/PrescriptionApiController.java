@@ -18,13 +18,11 @@ public class PrescriptionApiController {
     @Autowired
     private PrescriptionModuleService prescriptionModuleService;
 
-    // GET /api/prescriptions
     @GetMapping
     public ResponseEntity<List<PrescriptionDTO>> getAllPrescriptions() {
         return ResponseEntity.ok(prescriptionModuleService.getAllPrescriptions());
     }
 
-    // GET /api/prescriptions/by-patient?patientId={ssn}
     @GetMapping("/by-patient")
     public ResponseEntity<List<PrescriptionDTO>> byPatient(
             @RequestParam Integer patientId) {
@@ -32,7 +30,6 @@ public class PrescriptionApiController {
                 prescriptionModuleService.getPrescriptionsByPatient(patientId));
     }
 
-    // GET /api/prescriptions/by-physician?physicianId={id}
     @GetMapping("/by-physician")
     public ResponseEntity<List<PrescriptionDTO>> byPhysician(
             @RequestParam Integer physicianId) {
@@ -40,7 +37,6 @@ public class PrescriptionApiController {
                 prescriptionModuleService.getPrescriptionsByPhysician(physicianId));
     }
 
-    // GET /api/prescriptions/by-appointment?appointmentId={id}
     @GetMapping("/by-appointment")
     public ResponseEntity<List<PrescriptionDTO>> byAppointment(
             @RequestParam Integer appointmentId) {

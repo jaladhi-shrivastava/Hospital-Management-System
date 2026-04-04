@@ -18,7 +18,6 @@ public class PatientApiController {
     @Autowired
     private PatientModuleService patientModuleService;
 
-
     @GetMapping("/currently-admitted")
     public ResponseEntity<List<AdmittedPatientDTO>> getCurrentlyAdmitted() {
         return ResponseEntity.ok(patientModuleService.getAdmittedPatients());
